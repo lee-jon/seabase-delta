@@ -39,7 +39,11 @@ east
 read sign
 east
 north
-tape player
+get tape player
+south
+east
+south
+push button
 
 
 # Solution from Peter Torrence & C. Liddle; Dorothy Millard
