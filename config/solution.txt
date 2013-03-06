@@ -1,24 +1,71 @@
 # Solution
 
-# paste up to whatever line you want
-
+# Part 1
 examine body
-examine pockets
+examine pocket
 get card
 east
 south
 pull lever
 enter car
 fasten belt
-insert card
-insert card
-insert card
-insert card
+insert card in slot
+insert card in slot
+insert card in slot
+unfasten belt
+exit car
+get screwdriver
+enter car
+fasten belt
+insert card in slot
 unfasten belt
 exit car
 get torch
 enter car
 fasten belt
-insert card
+insert card in slot
 unfasten belt
 exit car
+south
+south
+open cupboard
+get suit
+north
+drop card
+drop suit
+
+# Part 2
+east
+read sign
+east
+north
+tape player
+
+
+# Solution from Peter Torrence & C. Liddle; Dorothy Millard
+SEABASE DELTA
+Written by Peter Torrence & C. Liddle (Firebird)
+Walk Through by Dorothy Millard (C64 Version)
+
+
+(Start in tubular walkway), EXAMINE BODY (no sign of life), EXAMINE POCKETS (find a plastic card), GET CARD, EXAMINE CARD (travel permit), OPEN BRIEFCASE (find documents), GET DOCUMENTS, READ DOCUMENTS (telex message), DROP DOCUMENTS, E (food farm area), E (too slippery), S (travel tube station “Charlie”, PULL LEVER (a travel tube car arrives), GO CAR, WEAR seat BELT, INSERT CARD (into the slot (the car travels to the next station), INSERT CARD, INSERT CARD, REMOVE BELT, LEAVE CAR (station “Foxtrot”), GET SCREWDRIVER, ENTER CAR, WEAR BELT, INSERT CARD, INSERT CARD, REMOVE BELT, LEAVE CAR (station “Beta”), S, S (diving storeroom), OPEN CUPBOARD, GET SUIT (diving), N, DROP CARD, DROP SUIT.
+
+E (curving east/west corridor), READ SIGN (in case of elevator breakdown contact “MISS ISLES ON 199” - note this number), E, N (electronic workshop), GET TAPE PLAYER, S, E, S (into sea-base lift No.1), PUSH BUTTON (up or down?), UP (second level), N, E, S, W, W (deep freeze), GET GUM (bubble), E, E (dining room), GET FORK, N, E, S, (food store), EXAMINE WICKER CAGE (you see a hen), EXAMINE HEN (it’s asleep), CHEW GUM, BLOW BUBBLE (it bursts and wakes the hen who lays an egg), GET EGG, N (corridor), PUSH SWITCH (it’s jammed on - need something to short it out), SHORT SWITCH (using the fork), CLIMB BELT (you finish up in the refuse compartment), GET BOWL (mixing), GET FOIL, GO CHUTE (you end up in a curving corridor on level 1), S (into the lift), UP, N, E, S, E (kitchen), DROP BOWL, W, W (laundry), GET IRON, IRON FOIL (the crumpled cooking foil), DROP IRON, GET LINE (washing).
+
+E, N, W, S (into the lift), STICK BUTTON (with the chewing gum), DROP GUM, UP (level 3, N, W, N, N, N, N (library), READ COOKBOOK (making pancakes), S, S, S, S, E, S (into the lift), DOWN, N. E, S, E (kitchen), EXAMINE SHELVES (you find a bag of flour), EXAMINE HOTPLATE (it’s on and hot), OPEN FRIDGE (you find a carton of milk), MAKE PANCAKE (using the mixing bowl, egg, flour and milk - you now have a bowl of pancake mixture), COOK PANCAKE, GET PANCAKE, W, N, W, S (into the lift), UP, N, E (walkway where the TV camera is), THROW PANCAKE (it covers the lens of the TV camera - you can now safely go north), E, N (power distribution room), PUSH SWITCH (you hear the feint sound of music), E (reactor room), GET HAMMER, W, S, W, DROP HAMMER, W, DROP PLAYER.
+
+W, N (living quarters), OPEN BUREAU, GET PEN (fountain pen), W (dental surgery), GET PINCERS (dental), E, N, N, N, W (music room - you hear the song "With a barrel of laughs and what the spirits advise. We’re going hammer and nails, to get our bodies to rise ..."), EXAMINE LOUDSPEAKER (it has a loose magnet), UNSCREW MAGNET (with the screwdriver - could help you get to the bottom of a problem), DROP SCREWDRIVER, GET MAGNET, E, S, S, S, S, E, N (armoury), GET SPEARGUN, S, S (into the lift), DOWN, N, N (gas bottle storage), GET BOTTLE (air), S, S (into the lift), DOWN, N, E, DROP LINE, DROP MAGNET, GET SUIT, N, EXAMINE BOTTLE (it has a hose attached), EXAMINE SUIT (it has a hose attached), CONNECT HOSE (you connect up the air supply and slip on the suit), OPEN HATCH, GO HATCH (it slams shut behind you), READ SIGN (automatic air-lock), TURN WHEEL (the airlock fills with water and you are ejected… you are swimming around in the murky depths), FIRE SPEARGUN (it gets the octopus in the eye), FILL PEN (with the octopus ink), GET PEN, GO HATCH, TURN WHEE.
+
+(You are on station “Beta”), DROP SPEARGUN, S, GET CARD, W, S (into lift), UP, N, W, S (head office - before you can use the travel-tube system again you need a new card), EXAMINE AUTO-CLERK (see a small slot), INSERT CARD (in slot - you are given a form and asked to sign for a new card), SIGN FORM (with the pen), DROP PEN, GET CARD, N. W, W, S (dining room), GET FLIPPERS, N, W, S (into lift), DOWN, N, E, N (station “Beta”), ENTER CAR, WEAR BELT, INSERT CARD, REMOVE BELT, LEAVE CAR (station “Charlie”), N (food farm area), WEAR FLIPPERS (sure-grip), E (you waddle over to the table), GET KEY, S (station), ENTER CAR, WEAR BELT, INSERT CARD, INSERT CARD, INSERT CARD, INSERT CARD, INSERT CARD, REMOVE BELT, LEAVE CAR (station “Beta”).
+
+S, GET LINE, GET MAGNET, E, S (Sea Base lift No.2), EXAMINE PANEL (it can be opened but it’s locked), UNLOCK PANEL (with the key - you discover a deep lift shaft), DROP KEY, EXAMINE SHAFT (it’s a long way down), TIE MAGNET (washing line), GET LINE, THROW LINE (it hangs down the lift shaft - the magnet picks up something), PULL LINE, GET DISC, EXAMINE DISC (one play), N, E, E, S (into lift), UP, UP, N, W, N, N (restroom), EXAMINE MACHINE (video games machine - insert disc for play), INSERT DISC (it’s one of them platform games… a clown is jumping up and down on a circus seesaw), PUSH JOYSTICK (a clown jumps into the air...).
+
+S, S, E, GET PLAYER, E, N, W (computer memory banks), GET CASSETTE, INSERT CASSETTE (in the tape player - it plays “Heavy Metal Music”), GET PLAYER, E, S, W, W (twisting walkway where the microphone is (you hear the sound of metal sliding from the south and there is a dazzling beam of light), DROP PLAYER (tape), S (the metal sliding doors are now open), GO DOOR (Seabase security control), EXAMINE KNOB (mini-sub release), PULL KNOB, N, N, E, E, N, N (launch control area), OPEN ENVELOPE (to gain certificate), READ CERTIFICATE (certificate of insurance), S, S, W, S (lift), DOWN, N, E, N (doctor’s surgery), EXAMINE THERMOMETER (104 degrees - note this number), S, E, E, S (head office), GET PEN, INSERT CARD, SIGN FORM, DROP PEN, GET CARD, N, E, S (into lift), DOWN.
+
+N, E, N (station “Beta”), ENTER CAR, WEAR BELT, INSERT CARD, INSERT CARD, INSERT CARD, REMOVE BELT, LEAVE CAR (station “Echo”), N (Tiger Fish missile bay), EXAMINE SCREEN (to aim missile enter degrees bearing - 104 from thermometer, and elevation - 199 from “Call Miss Isles”), TYPE 104, TYPE 199 (the missile is fired and hits the mast of the wreck), S, ENTER CAR, WEAR BELT, INSERT CARD, INSERT CARD, INSERT CARD, REMOVE BELT, LEAVE CAR (station “Beta”), ENTER HATCH, TURN WHEEL (murky depths), W (to the deck of an old wrecked ship where you see a broken mast), PULL NAILS (with the dental pincers), DROP PINCERS, GET NAILS, GET WOOD, D (hold of the wreck), EXAMINE CANNON (there’s something down the barrel), LEVER CANNON (with the length of strong wood), DROP WOOD, GET BALL (rusty), U, GET PLANK, E, ENTER HATCH, TURN WHEEL.
+
+S, W, S (into the lift), UP, N, DROP CARD, E, S, W (laundry), GET FOIL, E, N, W, S (into lift), UP, N, W, N, E (tavern), GET BARREL, W, S, E, E, GET HAMMER, N, N, N (huge launch pad), EXAMINE MISSILE (controlled by a beam of light up near the platform), EXAMINE PLATFORM (way up high – can’t reach), MAKE SEESAW (with the barrel, plank, hammer and nails - make sure you are carrying the ironed foil and the rusty ball), WALK PLANK (you are standing on one end of the seesaw), THROW BALL (it hits the other end of the seesaw and places you on the warhead platform), REFLECT BEAM (with the ironed foil - the beam goes out), JUMP (to get down), S, S, S, W, S (into lift), DOWN, DOWN, N, E, N, ENTER HATCH, TURN WHEEL, ENTER SUB (mini), PULL LEVER.
+
+HUMMMM..... The engines start.
+WELL DONE ED
+What a Story this is going to make back at the office.
