@@ -4,9 +4,10 @@ room(:lift1) do
     
   DESC
   
-  # Exits
+  self.exit_north(:corridor4)
   
-  # Logic
-  
-  # Items
+  item(:lift1_buttons, 'buttons') do
+    fixed = true
+    self.presence = "Row of buttons"
+  end
 end
