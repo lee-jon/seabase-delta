@@ -5,12 +5,12 @@ room(:lift2) do
   DESC
   
   self.exit_north = :corridor2
-  self.exit_up = :lift1b
-  self.exit_down = :lift1c
 
   item(:floor_panel, 'panel') do
+    fixed = true
     self.desc = "It can be OPENED but It's LOCKED!"
     self.presence = "Floor panel"
+    #TODO: This is openable but doesn't have the script
   end
 
   item(:lift2_buttons, 'buttons') do

@@ -1,0 +1,24 @@
+# Solution
+
+# paste up to whatever line you want
+
+examine body
+examine pockets
+get card
+east
+south
+pull lever
+enter car
+fasten belt
+insert card
+insert card
+insert card
+insert card
+unfasten belt
+exit car
+get torch
+enter car
+fasten belt
+insert card
+unfasten belt
+exit car

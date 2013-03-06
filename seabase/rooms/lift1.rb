@@ -5,6 +5,8 @@ room(:lift1) do
   DESC
   
   self.exit_north(:corridor4)
+  self.exit_up = :lift1b
+  self.exit_down = :lift1c
   
   item(:lift1_buttons, 'buttons') do
     fixed = true

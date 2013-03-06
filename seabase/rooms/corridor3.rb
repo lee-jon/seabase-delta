@@ -1,7 +1,7 @@
 room(:corridor3) do
   self.exit_west = :corridor2
   self.exit_east = :corridor4
-  self.exit_north = :workshop
+  self.exit_north = :electronic_workshop
 
   self.desc = <<-DESC
     This CORRIDOR still stretches EAST/WEST. I get the strangest feeling

@@ -1,6 +1,6 @@
-## ### ### ### ### ### ### ### ##
-##        SEABASE DELTA        ##
-## ### ### ### ### ### ### ### ##
+## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ##
+##                      SEABASE DELTA                      ##
+## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ##
 
 # Originally by Firebire software using the Quilled package 1986
 # Recreated, in Ruby, by Lee-Jon, for the IF engine
@@ -15,15 +15,15 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-06 19:53:30 +0000
+# Compiled 2013-03-06 21:22:24 +0000
 
 class Player < Node
-  def do_fastern(*words)
+  def do_fasten(*words)
     item = get_room.find(words)
     return if item.nil?
     item.script('fastern')
   end
-  def do_unfastern(*words)
+  def do_unfasten beltn(*words)
     item = get_room.find(words)
     return if item.nil?
     item.script('unfastern')
@@ -90,7 +90,7 @@ room(:carriage) do
       self.get_room.open = true
     SCRIPT
   end
-  item(:smallslot, 'slot', 'small') do
+  item(:smallslot, 'slot') do
     self.fixed = true
     self.short_desc = "small slot."
     self.presence = "small slot"
@@ -119,15 +119,14 @@ room(:corridor2) do
   item(:sign_missile, 'sign') do
     self.fixed = true
     self.desc = <<-DESC
-      In case of ELEVATOR breakdown contact MISS.
-      ISLES on "199"
+      In case of ELEVATOR breakdown contact MISS. ISLES on "199"
     DESC
   end
 end
 room(:corridor3) do
   self.exit_west = :corridor2
   self.exit_east = :corridor4
-  self.exit_north = :workshop
+  self.exit_north = :electronic_workshop
 
   self.desc = <<-DESC
     This CORRIDOR still stretches EAST/WEST. I get the strangest feeling
@@ -135,6 +134,30 @@ room(:corridor3) do
     compartment to the NORTH.
   DESC
   self.short_desc = "Corridor"
+end
+room(:corridor4) do
+  self.short_desc = "Corridor."
+  self.desc = <<-DESC
+    East / West curving corridor. There is a
+    dimly lit alcove to the south.
+  DESC
+  
+  self.exit_west  = :corridor3
+  self.exit_east  = :corridor1
+  self.exit_south = :lift1
+  
+  scenery(:chute, 'chute') do
+    fixed = true
+    presence = "Large metal chute (sloping up)"
+    
+    self.desc = <<-DESC
+      Nasty smell of rubbish
+    DESC
+    self.script_enter do
+      puts "You slide back down. It's too steep."
+      return false
+    end
+  end
 end
 room(:diving_storeroom) do
   self.short_desc = "Diving Storeroom"
@@ -174,20 +197,39 @@ room(:food_farm) do
   scenery(:seaweed, 'seaweed') do
   end
 end
-room(:lift2) do
-  self.exit_north = :corridor2
+room(:lift1) do
+  self.short_desc = "Lift no. 1"
+  self.desc = <<-DESC
+    
+  DESC
+  
+  self.exit_north(:corridor4)
   self.exit_up = :lift1b
   self.exit_down = :lift1c
+  
+  item(:lift1_buttons, 'buttons') do
+    fixed = true
+    self.presence = "Row of buttons"
+  end
+end
+room(:lift2) do
+  self.short_desc = "Lift 2"
   self.desc = <<-DESC
     Sea-Base Lift Number >2<. The EXIT is to the NORTH.
   DESC
-  self.short_desc = "Lift 2"
+  
+  self.exit_north = :corridor2
+
   item(:floor_panel, 'panel') do
+    fixed = true
     self.desc = "It can be OPENED but It's LOCKED!"
     self.presence = "Floor panel"
+    #TODO: This is openable but doesn't have the script
   end
+
   item(:lift2_buttons, 'buttons') do
-    self.presence = "Row of buttons"
+    fixed = true
+    self.presence = "Row of buttons"    
   end
 end
 room(:missile_room) do
@@ -228,6 +270,21 @@ room(:station_alpha) do
     DESC
     self.short_desc = "Torch"
     self.presence = "Torch"
+  end
+end
+room(:station_beta) do
+  self.exit_south = :corridor1
+  self.destination = :station_charlie
+  self.desc = <<-DESC
+    I am on a platform at STATION "BETA". A connecting walk-tube
+    leads off SOUTH.
+  DESC
+  item(:hatch, 'hatch') do
+    self.openable = true
+    self.script_enter = <<-SCRIPT
+      puts "Bang! Hatch slams shut!"
+      get_root.move(:player, :airlock)
+      SCRIPT
   end
 end
 room(:station_charlie) do
@@ -413,7 +470,7 @@ room(:walkway) do
 
   player
 end
-room(:workshop) do
+room(:electronic_workshop) do
   self.exit_south = :corridor3
   self.desc = "This is the ELECTRIC WORKSHOP. The only exit is SOUTH from here."
   self.short_desc = "Workshop."

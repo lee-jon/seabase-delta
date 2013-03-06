@@ -30,7 +30,7 @@ room(:carriage) do
       self.get_room.open = true
     SCRIPT
   end
-  item(:smallslot, 'slot', 'small') do
+  item(:smallslot, 'slot') do
     self.fixed = true
     self.short_desc = "small slot."
     self.presence = "small slot"

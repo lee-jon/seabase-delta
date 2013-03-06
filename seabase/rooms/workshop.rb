@@ -1,4 +1,4 @@
-room(:workshop) do
+room(:electronic_workshop) do
   self.exit_south = :corridor3
   self.desc = "This is the ELECTRIC WORKSHOP. The only exit is SOUTH from here."
   self.short_desc = "Workshop."

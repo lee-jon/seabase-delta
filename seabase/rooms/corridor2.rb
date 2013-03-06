@@ -9,8 +9,7 @@ room(:corridor2) do
   item(:sign_missile, 'sign') do
     self.fixed = true
     self.desc = <<-DESC
-      In case of ELEVATOR breakdown contact MISS.
-      ISLES on "199"
+      In case of ELEVATOR breakdown contact MISS. ISLES on "199"
     DESC
   end
 end
