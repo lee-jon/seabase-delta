@@ -7,7 +7,7 @@ room(:corridor2) do
     There is a simly lit ALCOVE to the SOUTH.
   DESC
   item(:sign_missile, 'sign') do
-    self.presence "Sign"
+    self.presence = "Sign"
     self.fixed = true
     self.desc = <<-DESC
       In case of ELEVATOR breakdown contact MISS. ISLES on "199"
