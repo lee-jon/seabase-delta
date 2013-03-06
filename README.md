@@ -26,4 +26,6 @@ Then play the game with
 
 ## License
 Seabase Delta is licensed to Firebird Software (C) 1985
-This is provided as a complete game to test on the IF engine, not for commerical use. 
+
+For use of the IF engine see its own LICENSE
+For use of these files see LICENSE
