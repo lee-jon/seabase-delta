@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-06 22:28:01 +0000
+# Compiled 2013-03-06 22:59:42 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -109,22 +109,26 @@ room(:corridor1) do
   self.short_desc = "Corridor"
 end
 room(:corridor2) do
-  self.exit_west = :corridor1
-  self.exit_east = :corridor3
-  self.exit_south = :lift2
+  self.short_desc = "E/W Corridor."
   self.desc = <<-DESC
     The CURVING EAST/WEST CORRIDOR continues here.
     There is a simly lit ALCOVE to the SOUTH.
   DESC
+
+  self.exit_west = :corridor1
+  self.exit_east = :corridor3
+  self.exit_south = :lift2
+
+
   item(:sign_missile, 'sign') do
-    self.presence "Sign"
+    self.presence = "Sign"
     self.fixed = true
     self.desc = <<-DESC
       In case of ELEVATOR breakdown contact MISS. ISLES on "199"
     DESC
-    self.script_read = <<-DESC
-      puts "In case of ELEVATOR breakdown contact MISS. ISLES on \"199\""
-    DESC
+    self.script_read = <<-SCRIPT
+      puts "In case of ELEVATOR breakdown contact MISS. ISLES on 199"
+    SCRIPT
   end
 end
 room(:corridor3) do
@@ -204,12 +208,19 @@ end
 room(:lift1) do
   self.short_desc = "Lift no. 1"
   self.desc = <<-DESC
-    
+    Sea-base lift Number >2<.
+    The exit is to the north.
   DESC
   
   self.exit_north = :corridor4
   self.exit_up    = :lift1b
   self.exit_down  = :lift1c
+
+    
+  self.script_enter = <<-SCRIPT
+    puts "A light comes on"
+    return true
+  SCRIPT
   
   item(:lift1_buttons, 'button') do
     fixed = true
@@ -217,8 +228,6 @@ room(:lift1) do
     self.script_push = <<-SCRIPT
       puts "Which one... UP or DOWN"
     SCRIPT
-    
-    #    TODO: on enter light comes on
   end
 end
 room(:lift1c) do
@@ -227,7 +236,7 @@ room(:lift1c) do
   DESC
   
   self.script_enter = <<-ENTER
-    puts "Bottom floor"
+    puts "Bottom floor\n"
     return false
   ENTER
 end

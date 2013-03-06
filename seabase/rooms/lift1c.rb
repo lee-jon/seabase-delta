@@ -4,7 +4,7 @@ room(:lift1c) do
   DESC
   
   self.script_enter = <<-ENTER
-    puts "Bottom floor"
+    puts "Bottom floor\n"
     return false
   ENTER
 end
