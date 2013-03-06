@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-06 22:59:42 +0000
+# Compiled 2013-03-06 23:17:19 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -188,6 +188,18 @@ room(:diving_storeroom) do
     end
   end
 end
+room(:fcorridor1) do
+  self.desc = <<-DESC
+    This is the second lever corridor system going east & west. The lift
+    entrance is south and a walkway also leads north.
+  DESC
+  
+  # Exits
+  
+  # Logic
+  
+  # Items
+end
 room(:food_farm) do
   self.exit_west  = :walkway
   self.exit_south = :station_charlie
@@ -208,13 +220,36 @@ end
 room(:lift1) do
   self.short_desc = "Lift no. 1"
   self.desc = <<-DESC
-    Sea-base lift Number >2<.
+    Sea-base lift Number >1<.
     The exit is to the north.
   DESC
   
   self.exit_north = :corridor4
   self.exit_up    = :lift1b
   self.exit_down  = :lift1c
+
+    
+  self.script_enter = <<-SCRIPT
+    puts "A light comes on"
+    return true
+  SCRIPT
+  
+  item(:lift1_buttons, 'button') do
+    fixed = true
+    self.presence = "Row of buttons"
+    self.script_push = <<-SCRIPT
+      puts "Which one... UP or DOWN"
+    SCRIPT
+  end
+end
+room(:lift1a) do
+  self.short_desc = "Lift no. 1"
+  self.desc = <<-DESC
+    Sea-base lift Number >1<.
+    The exit is to the north.
+  DESC
+  
+  self.exit_down  = :lift1
 
     
   self.script_enter = <<-SCRIPT

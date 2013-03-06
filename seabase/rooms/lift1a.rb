@@ -1,13 +1,11 @@
-room(:lift1) do
+room(:lift1a) do
   self.short_desc = "Lift no. 1"
   self.desc = <<-DESC
     Sea-base lift Number >1<.
     The exit is to the north.
   DESC
   
-  self.exit_north = :corridor4
-  self.exit_up    = :lift1b
-  self.exit_down  = :lift1c
+  self.exit_down  = :lift1
 
     
   self.script_enter = <<-SCRIPT
