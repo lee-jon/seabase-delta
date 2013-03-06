@@ -29,3 +29,18 @@ task :build do
   game_file << "end"
   game_file.close
 end
+
+task :room, :arg1, :arg2 do |t, args|
+  room_name = args[:arg1]
+  file_name = "seabase/rooms/" + room_name + ".rb"
+
+  puts "Creating a new room for #{room_name}"
+  
+  room = File.new(file_name, "w+")
+  content = File.read('config/blank_room.rb')
+  content.gsub!('ROOMNAME', room_name)
+
+  room << content
+  room.close
+  puts "writen to #{file_name}"
+end
