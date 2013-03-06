@@ -8,8 +8,8 @@ room(:fcorridor2) do
   
   self.exit_south = :
   self.exit_north = :surgery
-  self.exit_east  = :fcorridor1
-  self.exit_west  = :fcorridor3
+  self.exit_east  = :fcorridor3
+  self.exit_west  = :fcorridor4
   
   # Logic
   

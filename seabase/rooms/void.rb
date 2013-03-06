@@ -26,13 +26,16 @@ room(:void) do
       end
     SCRIPT
     item(:plastic_card, 'card', 'plastic') do
+      self.usage = 6
       self.desc = <<-DESC
         TRAVEL PERMIT issues to and for use of secret agent -
         SIGNED -"MAJOR I.RON.FOIL"
       DESC
       self.short_desc = "Plastic card"
       self.presence = "Plastic card"
+      
       self.script_use = <<-SCRIPT
+        self.usage -= 1
         if args[0].nil?
           puts "Insert it where?"
           return false
