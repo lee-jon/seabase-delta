@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-06 21:37:25 +0000
+# Compiled 2013-03-06 22:28:01 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -117,23 +117,27 @@ room(:corridor2) do
     There is a simly lit ALCOVE to the SOUTH.
   DESC
   item(:sign_missile, 'sign') do
+    self.presence "Sign"
     self.fixed = true
     self.desc = <<-DESC
       In case of ELEVATOR breakdown contact MISS. ISLES on "199"
     DESC
+    self.script_read = <<-DESC
+      puts "In case of ELEVATOR breakdown contact MISS. ISLES on \"199\""
+    DESC
   end
 end
 room(:corridor3) do
-  self.exit_west = :corridor2
-  self.exit_east = :corridor4
-  self.exit_north = :electronic_workshop
-
   self.desc = <<-DESC
     This CORRIDOR still stretches EAST/WEST. I get the strangest feeling
     - like I am walking around a huge WHITE MINT! There is also a
     compartment to the NORTH.
   DESC
   self.short_desc = "Corridor"
+    
+  self.exit_west = :corridor2
+  self.exit_east = :corridor4
+  self.exit_north = :electronic_workshop
 end
 room(:corridor4) do
   self.short_desc = "Corridor."
@@ -207,10 +211,25 @@ room(:lift1) do
   self.exit_up    = :lift1b
   self.exit_down  = :lift1c
   
-  item(:lift1_buttons, 'buttons') do
+  item(:lift1_buttons, 'button') do
     fixed = true
     self.presence = "Row of buttons"
+    self.script_push = <<-SCRIPT
+      puts "Which one... UP or DOWN"
+    SCRIPT
+    
+    #    TODO: on enter light comes on
   end
+end
+room(:lift1c) do
+  self.short_desc = "lift1c"
+  self.desc = <<-DESC    
+  DESC
+  
+  self.script_enter = <<-ENTER
+    puts "Bottom floor"
+    return false
+  ENTER
 end
 room(:lift2) do
   self.short_desc = "Lift 2"
