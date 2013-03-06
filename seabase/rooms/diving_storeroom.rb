@@ -7,11 +7,11 @@ room(:diving_storeroom) do
   self.exit_north = :corridor1
 
   item(:cupboard, 'cupboard') do
-    openable = true
-    fixed = true
+    self.openable = true
+    self.fixed = true
     self.presence = "Cupboard"
 
-    item(:diving_suit, 'diving suit') do
+    item(:diving_suit, 'suit') do
       self.desc = "There's a HOSE fitted."
       self.presence = "Diving suit"
       #TODO - when you wear suit it checks for air and says

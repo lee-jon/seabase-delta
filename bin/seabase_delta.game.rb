@@ -1,6 +1,6 @@
-## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ##
-##                      SEABASE DELTA                      ##
-## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ##
+## ### ### ### ### ### ### ### ##
+##        SEABASE DELTA        ##
+## ### ### ### ### ### ### ### ##
 
 # Originally by Firebire software using the Quilled package 1986
 # Recreated, in Ruby, by Lee-Jon, for the IF engine
@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-06 21:22:24 +0000
+# Compiled 2013-03-06 21:37:25 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -23,7 +23,7 @@ class Player < Node
     return if item.nil?
     item.script('fastern')
   end
-  def do_unfasten beltn(*words)
+  def do_unfasten(*words)
     item = get_room.find(words)
     return if item.nil?
     item.script('unfastern')
@@ -168,11 +168,11 @@ room(:diving_storeroom) do
   self.exit_north = :corridor1
 
   item(:cupboard, 'cupboard') do
-    openable = true
-    fixed = true
+    self.openable = true
+    self.fixed = true
     self.presence = "Cupboard"
 
-    item(:diving_suit, 'diving suit') do
+    item(:diving_suit, 'suit') do
       self.desc = "There's a HOSE fitted."
       self.presence = "Diving suit"
       #TODO - when you wear suit it checks for air and says
@@ -203,9 +203,9 @@ room(:lift1) do
     
   DESC
   
-  self.exit_north(:corridor4)
-  self.exit_up = :lift1b
-  self.exit_down = :lift1c
+  self.exit_north = :corridor4
+  self.exit_up    = :lift1b
+  self.exit_down  = :lift1c
   
   item(:lift1_buttons, 'buttons') do
     fixed = true
