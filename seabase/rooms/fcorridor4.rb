@@ -1,12 +1,10 @@
 room(:fcorridor4) do
-  self.short_desc = "fcorridor4"
   self.desc = <<-DESC
-    
+    The east/west curving corridor leads on with a very
+    brightly lit Walk-way south.
   DESC
   
-  # Exits
-  
-  # Logic
-  
-  # Items
+  self.exit_east  = :fcorridor2
+  self.exit_west  = :fcorridor4
+  self.exit_south = :head_office
 end
