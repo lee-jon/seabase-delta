@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-06 23:17:19 +0000
+# Compiled 2013-03-07 08:41:09 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -57,6 +57,20 @@ room(:at_long_table) do
 
       return false
   SCRIPT
+end
+room(:bottle_store) do
+  self.short_desc = "bottle_store"
+  self.desc = <<-DESC
+    The Gas Bottle Store. The exit is south.
+  DESC
+  
+  self.exit_south = :fcorridor1
+  
+  item(:air_bottle, 'bottle') do
+    self.presence   = "Air bottle"
+    self.short_desc = "Air bottle"
+    self.desc = "There's a hose fitted"
+  end
 end
 room(:carriage) do
   self.desc = <<-DESC
@@ -194,11 +208,49 @@ room(:fcorridor1) do
     entrance is south and a walkway also leads north.
   DESC
   
-  # Exits
+  self.exit_south = :lift1b
+  self.exit_north = :bottle_store
+  self.exit_east  = :fcorridor2
+  self.exit_west  = :fcorridor4
+end
+room(:fcorridor2) do
+  self.short_desc = "fcorridor2"
+  self.desc = <<-DESC
+    As the corridor continues East/West, I begin to with I was still on the
+    sub'. At least the gangwaus were straight!
+    There are also compartments to the north and south.
+  DESC
+  
+  #self.exit_south = :
+  self.exit_north = :surgery
+  self.exit_east  = :fcorridor3
+  self.exit_west  = :fcorridor4
   
   # Logic
   
   # Items
+end
+room(:fcorridor3) do
+  self.short_desc = "fcorridor3"
+  self.desc = <<-DESC
+    The corridor narrows here slightly at a junction between walkways.
+    Exits are to the east, west & south. There's an awful smell of 
+    rubbish coming from somewhere!
+  DESC
+  
+  self.exit_east  = :fcorridor2
+  self.exit_west  = :fcorridor4
+  self.exit_south = :food_store
+end
+room(:fcorridor4) do
+  self.desc = <<-DESC
+    The east/west curving corridor leads on with a very
+    brightly lit Walk-way south.
+  DESC
+  
+  self.exit_east  = :fcorridor3
+  self.exit_west  = :fcorridor1
+  self.exit_south = :head_office
 end
 room(:food_farm) do
   self.exit_west  = :walkway
@@ -217,6 +269,26 @@ room(:food_farm) do
   scenery(:seaweed, 'seaweed') do
   end
 end
+room(:head_office) do
+  self.short_desc = "head_office"
+  self.desc = <<-DESC
+    ****H E A D - O F F I C E****<br>
+    A brightly lit passage leads off NORTH
+  DESC
+  
+  self.exit_south = :fcorridor4
+  
+  item(:auto_clerk, 'auto-clerk') do
+    self.presence = "auto-clerk"
+    self.
+    
+    item(:officeslot, 'slot') do
+      self.fixed = true
+      self.short_desc = "small slot"
+      self.presence = "small slot"
+    end
+  end
+end
 room(:lift1) do
   self.short_desc = "Lift no. 1"
   self.desc = <<-DESC
@@ -228,9 +300,8 @@ room(:lift1) do
   self.exit_up    = :lift1b
   self.exit_down  = :lift1c
 
-    
   self.script_enter = <<-SCRIPT
-    puts "A light comes on"
+    puts "A light comes on<br>"
     return true
   SCRIPT
   
@@ -242,22 +313,17 @@ room(:lift1) do
     SCRIPT
   end
 end
-room(:lift1a) do
+room(:lift1b) do
   self.short_desc = "Lift no. 1"
   self.desc = <<-DESC
     Sea-base lift Number >1<.
     The exit is to the north.
   DESC
-  
-  self.exit_down  = :lift1
 
-    
-  self.script_enter = <<-SCRIPT
-    puts "A light comes on"
-    return true
-  SCRIPT
-  
-  item(:lift1_buttons, 'button') do
+  self.exit_down  = :lift1
+  self.exit_up    = :lift1d
+
+  item(:lift1b_buttons, 'button') do
     fixed = true
     self.presence = "Row of buttons"
     self.script_push = <<-SCRIPT
@@ -265,6 +331,7 @@ room(:lift1a) do
     SCRIPT
   end
 end
+
 room(:lift1c) do
   self.short_desc = "lift1c"
   self.desc = <<-DESC    
@@ -275,6 +342,20 @@ room(:lift1c) do
     return false
   ENTER
 end
+room(:lift1d) do
+  self.short_desc = "lift1d"
+  self.desc = <<-DESC
+    Top floor lift
+  DESC
+
+  self.exit_down = :lift1b
+
+  self.script_enter = <<-SCRIPT
+    puts "Ping button pops out"
+    return false
+  SCRIPT
+end
+
 room(:lift2) do
   self.short_desc = "Lift 2"
   self.desc = <<-DESC
@@ -424,6 +505,23 @@ room(:station_foxtrot) do
     self.presence = "Screwdriver"
   end
 end
+room(:surgery) do
+  self.short_desc = "surgery"
+  self.desc = <<-DESC
+    I'm in the doctors surgery. Exit is South
+  DESC
+  
+  self.exit_south = :fcorridor2
+  
+  item(:thermometer, 'thermometer') do
+    self.presence   = "thermometer"
+    self.short_desc = "thermometer"
+    self.desc = <<-DESC
+      104 degrees! Wow! This adventure must have really fired
+      your imagination!
+    DESC
+  end
+end
 room(:void) do
   self.desc = "You are in the void - how did you get here?"
   self.short_desc = "The Void"
@@ -452,13 +550,16 @@ room(:void) do
       end
     SCRIPT
     item(:plastic_card, 'card', 'plastic') do
+      self.usage = 6
       self.desc = <<-DESC
         TRAVEL PERMIT issues to and for use of secret agent -
         SIGNED -"MAJOR I.RON.FOIL"
       DESC
       self.short_desc = "Plastic card"
       self.presence = "Plastic card"
+      
       self.script_use = <<-SCRIPT
+        self.usage -= 1
         if args[0].nil?
           puts "Insert it where?"
           return false

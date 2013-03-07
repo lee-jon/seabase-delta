@@ -4,6 +4,9 @@
 examine body
 examine pocket
 get card
+read card
+open briefcase
+get documents
 east
 south
 pull lever
