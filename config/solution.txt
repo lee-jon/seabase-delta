@@ -46,7 +46,15 @@ east
 south
 push button
 up
-
+north
+east
+south
+west
+west
+get gum
+east
+east
+get fork
 
 
 

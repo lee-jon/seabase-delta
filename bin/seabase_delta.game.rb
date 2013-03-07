@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-07 08:41:09 +0000
+# Compiled 2013-03-07 09:07:26 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -181,6 +181,40 @@ room(:corridor4) do
     end
   end
 end
+room(:deep_freeze) do
+  self.short_desc = "deep_freeze"
+  self.desc = <<-DESC
+    This is the DDDEEP FFFREEEZE SECTION. The way out is EAST.
+  DESC
+  
+  self.exit_east = :laundry
+  
+  item(:stick_of_gum, 'gum') do
+    self.presence = "Stick of Bubble Gum"
+    self.desc = "Its rock hard!"
+  end
+end
+room(:dinning_room) do
+  self.short_desc = "dinning_room"
+  self.desc = <<-DESC
+    The DINNING ROOM AREA. Walkways lead NORTH EAST and WEST.
+  DESC
+  
+  self.exit_north = :fcorridor2
+  self.exit_east  = :kitchen
+  self.exit_west  = :laundry
+  
+  item(:flippers, 'flippers', 'sure-grip') do
+    self.presence = "Pair of \"Sure Grip\" Flippers"
+    self.desc = <<-DESC
+    DESC
+  end
+  
+  item(:fork, 'fork') do
+    self.presence ="Fork"
+    self.desc = "One of it's PRONGS is missing."
+  end
+end
 room(:diving_storeroom) do
   self.short_desc = "Diving Storeroom"
   self.desc = <<-DESC
@@ -216,12 +250,12 @@ end
 room(:fcorridor2) do
   self.short_desc = "fcorridor2"
   self.desc = <<-DESC
-    As the corridor continues East/West, I begin to with I was still on the
-    sub'. At least the gangwaus were straight!
+    As the CORRIDOR continues EAST/WEST, I begin to with I was still on the
+    SUB'. At least the gangwaus were straight!
     There are also compartments to the north and south.
   DESC
   
-  #self.exit_south = :
+  self.exit_south = :dinning_room
   self.exit_north = :surgery
   self.exit_east  = :fcorridor3
   self.exit_west  = :fcorridor4
@@ -289,6 +323,38 @@ room(:head_office) do
     end
   end
 end
+room(:kitchen) do
+  self.short_desc = "kitchen"
+  self.desc = <<-DESC
+    
+  DESC
+  
+  # Exits
+  
+  # Logic
+  
+  # Items
+end
+room(:laundry) do
+  self.short_desc = "laundry"
+  self.desc = <<-DESC
+    I have wantered into the LAUNDRY AREA. There is an ICY COLD Tunnel WEST
+    & Exit EAST.
+  DESC
+  
+  self.exit_west = :deep_freeze
+  self.exit_east = :dinning_room
+  
+  item(:steam_iron, 'iron') do
+    self.presence = "Steam-Iron"
+    self.desc = "Its ON and HOT!"
+  end
+  
+  item(:washing_line, 'washing line') do
+    self.presence = "Washing line"
+    self.desc = "It's LONG....but not that STRONG.."
+  end
+end
 room(:lift1) do
   self.short_desc = "Lift no. 1"
   self.desc = <<-DESC
@@ -312,6 +378,11 @@ room(:lift1) do
       puts "Which one... UP or DOWN"
     SCRIPT
   end
+  
+  self.script_up  = <<-SCRIPT
+    puts "Shhh doors close. Lift ascends."
+    puts "Doors open."
+  SCRIPT
 end
 room(:lift1b) do
   self.short_desc = "Lift no. 1"
@@ -322,6 +393,7 @@ room(:lift1b) do
 
   self.exit_down  = :lift1
   self.exit_up    = :lift1d
+  self.exit_north = :fcorridor1
 
   item(:lift1b_buttons, 'button') do
     fixed = true
@@ -351,7 +423,8 @@ room(:lift1d) do
   self.exit_down = :lift1b
 
   self.script_enter = <<-SCRIPT
-    puts "Ping button pops out"
+    puts "PING! OH BLOW! button keeps popping out!
+    puts "I need something to STICK it.."
     return false
   SCRIPT
 end
@@ -408,12 +481,15 @@ room(:station_alpha) do
     I am on a platform at STATION "ALPHA"
   DESC
   self.short_desc = "Station Alpha"
+  
   item(:torch, 'torch') do
     self.desc = <<-DESC
       Well every adventure's GOT to have one of these hasn't it?
     DESC
     self.short_desc = "Torch"
     self.presence = "Torch"
+
+    #TODO self.script to do the desc on pick up like the original game?
   end
 end
 room(:station_beta) do

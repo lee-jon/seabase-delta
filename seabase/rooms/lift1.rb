@@ -21,4 +21,9 @@ room(:lift1) do
       puts "Which one... UP or DOWN"
     SCRIPT
   end
+  
+  self.script_up  = <<-SCRIPT
+    puts "Shhh doors close. Lift ascends."
+    puts "Doors open."
+  SCRIPT
 end

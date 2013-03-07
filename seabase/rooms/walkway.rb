@@ -42,7 +42,7 @@ room(:walkway) do
     self.script_examine = <<-SCRIPT
         get_root.move(:pockets, parent, false)
         return true
-      SCRIPT
+    SCRIPT
   end
 
   player
