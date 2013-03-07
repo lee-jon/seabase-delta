@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-07 09:30:37 +0000
+# Compiled 2013-03-07 18:39:46 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -27,6 +27,22 @@ class Player < Node
     item = get_room.find(words)
     return if item.nil?
     item.script('unfastern')
+  end
+
+  def do_chew(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    if item.script('chew')
+      puts "Sorry Ed, it's not possible to do that"
+    end
+  end
+  
+  def do_blow(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    if item.script('blow')
+      return
+    end
   end
 end
 
@@ -190,8 +206,43 @@ room(:deep_freeze) do
   self.exit_east = :laundry
   
   item(:stick_of_gum, 'gum') do
-    self.presence = "Stick of Bubble Gum"
-    self.desc = "Its rock hard!"
+    self.presence   = "Stick of Bubble Gum"
+    self.desc       = "Its rock hard!"
+    self.short_desc = "Gum"
+    self.chewed     = false
+    
+    self.script_chew = <<-SCRIPT
+      puts chewed ? "OK. Nothing happens." : "OK."
+      self.short_desc = "Soft gooeey gum"
+      self.desc = nil
+      self.chewed = true
+
+      return false
+    SCRIPT
+    
+    scenery(:bubble, 'bubble') do
+      # This is here to execute the blow bubble verb
+      self.script_blow = <<-BLOW
+        if self.parent.chewed
+          puts "PUFF! BLOW! the Bubble is GROWING!"
+          puts "AND GROWING!"
+          puts "BANG!!! WOW! That could wake the dead!"
+
+          if get_room.tag == :food_store
+            if get_root.find(:hen).parent.tag == :food_store
+              if get_root.find(:egg).parent.tag == :hen
+                puts "<br>CLUCK! CLUCK! CLUCK!- HEN IS AROUSED!"
+                puts "And Does her duty!"
+                get_root.find(:hen).presence = "Brighted eyed hen"
+                get_root.move(:egg, :food_store, false)
+              end
+            end
+          end
+        else
+          puts "The gum is hard!" #TODO check this text in the original game
+        end
+      BLOW
+    end
   end
 end
 room(:dinning_room) do
@@ -265,7 +316,6 @@ room(:fcorridor2) do
   # Items
 end
 room(:fcorridor3) do
-  self.short_desc = "fcorridor3"
   self.desc = <<-DESC
     The corridor narrows here slightly at a junction between walkways.
     Exits are to the east, west & south. There's an awful smell of 
@@ -313,8 +363,9 @@ room(:food_store) do
   
   item(:wicker_cage, 'cage') do
     self.presence = "Wicker Cage"
-    self.desc = ""
+    self.fixed = true
     
+    #TODO the delow doesn't work??? Even if there's no child
     self.script_examine = <<-SCRIPT
       if self.children.nil?
         return false
@@ -326,29 +377,20 @@ room(:food_store) do
       end
     SCRIPT
     
+    self.script_take = <<-SCRIPT
+      puts "Thanks-but NO THANKS!"
+      return false
+    SCRIPT
+    
     item(:hen, 'hen') do
       self.presence = "Hen"
       self.desc = "It is asleep"
-    end
-  end
-end
-room(:head_office) do
-  self.short_desc = "head_office"
-  self.desc = <<-DESC
-    ****H E A D - O F F I C E****<br>
-    A brightly lit passage leads off NORTH
-  DESC
-  
-  self.exit_south = :fcorridor4
-  
-  item(:auto_clerk, 'auto-clerk') do
-    self.presence = "auto-clerk"
-    self.desc = ""
-    
-    item(:officeslot, 'slot') do
       self.fixed = true
-      self.short_desc = "small slot"
-      self.presence = "small slot"
+      
+      item(:egg, 'egg') do
+        self.presence   = "Large brown egg"
+        self.short_desc = "Large brown egg"
+      end
     end
   end
 end
@@ -641,6 +683,7 @@ room(:void) do
       return false
     SCRIPT
   end
+  
   scenery(:pockets, 'pocket') do
     self.script_examine = <<-SCRIPT
       if self.children.nil?

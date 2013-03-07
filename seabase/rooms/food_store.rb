@@ -33,6 +33,8 @@ room(:food_store) do
       self.fixed = true
       
       item(:egg, 'egg') do
+        self.presence   = "Large brown egg"
+        self.short_desc = "Large brown egg"
       end
     end
   end
