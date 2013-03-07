@@ -12,6 +12,7 @@ room(:void) do
       return false
     SCRIPT
   end
+  
   scenery(:pockets, 'pocket') do
     self.script_examine = <<-SCRIPT
       if self.children.nil?

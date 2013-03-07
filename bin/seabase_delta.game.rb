@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-07 09:07:26 +0000
+# Compiled 2013-03-07 09:30:37 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -303,6 +303,35 @@ room(:food_farm) do
   scenery(:seaweed, 'seaweed') do
   end
 end
+room(:food_store) do
+  self.short_desc = "food_store"
+  self.desc = <<-DESC
+    The seems to be some sort of FOOD-STORE. The way out is NORTH.
+  DESC
+  
+  self.exit_north = :fcorridor3
+  
+  item(:wicker_cage, 'cage') do
+    self.presence = "Wicker Cage"
+    self.desc = ""
+    
+    self.script_examine = <<-SCRIPT
+      if self.children.nil?
+        return false
+      else
+        puts "I see something"
+        self.open = true
+        get_root.move(:hen, parent)
+        return false
+      end
+    SCRIPT
+    
+    item(:hen, 'hen') do
+      self.presence = "Hen"
+      self.desc = "It is asleep"
+    end
+  end
+end
 room(:head_office) do
   self.short_desc = "head_office"
   self.desc = <<-DESC
@@ -314,7 +343,7 @@ room(:head_office) do
   
   item(:auto_clerk, 'auto-clerk') do
     self.presence = "auto-clerk"
-    self.
+    self.desc = ""
     
     item(:officeslot, 'slot') do
       self.fixed = true
@@ -705,7 +734,7 @@ room(:walkway) do
     self.script_examine = <<-SCRIPT
         get_root.move(:pockets, parent, false)
         return true
-      SCRIPT
+    SCRIPT
   end
 
   player

@@ -9,7 +9,7 @@ room(:head_office) do
   
   item(:auto_clerk, 'auto-clerk') do
     self.presence = "auto-clerk"
-    self.
+    self.desc = ""
     
     item(:officeslot, 'slot') do
       self.fixed = true
