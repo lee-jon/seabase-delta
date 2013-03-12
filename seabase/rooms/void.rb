@@ -27,7 +27,7 @@ room(:void) do
       end
     SCRIPT
     item(:plastic_card, 'card', 'plastic') do
-      self.usage = 6
+      self.usage = 5
       self.desc = <<-DESC
         TRAVEL PERMIT issues to and for use of secret agent -
         SIGNED -"MAJOR I.RON.FOIL"
@@ -36,7 +36,6 @@ room(:void) do
       self.presence = "Plastic card"
       
       self.script_use = <<-SCRIPT
-        self.usage -= 1
         if args[0].nil?
           puts "Insert it where?"
           return false
@@ -47,7 +46,14 @@ room(:void) do
         elsif get_room.open
           puts get_room.short_desc
           return false
+        elsif usage == 0
+          puts "A metallic voice - SORRY - YOU HAVE USED"
+          puts " UP YOUR TRAVEL PERMIT - PLEASE REPORT TO"
+          puts "HEAD OFFICE & SIGN FOR NEW CARD - THANKYOU"
+          return false
         else
+          self.usage -= 1
+          
           puts "SHHHHH...sliding doors close."
           puts "The car hurtles along the tunnel at high speed"
           puts " and then jolts to a halt"

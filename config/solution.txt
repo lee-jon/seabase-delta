@@ -3,7 +3,7 @@ examine pocket
 get card
 read card
 open briefcase
-get documents
+read documents
 east
 south
 pull lever
@@ -13,7 +13,7 @@ insert card in slot
 insert card in slot
 insert card in slot
 unfasten belt
-exit car
+exit carade
 get screwdriver
 enter car
 fasten belt
@@ -59,11 +59,13 @@ examine wicker cage
 examine hen
 chew gum
 blow bubble
+get egg
+north
 
 
 
 
-GET EGG, N (corridor), PUSH SWITCH (it’s jammed on - need something to short it out), SHORT SWITCH (using the fork), CLIMB BELT (you finish up in the refuse compartment), GET BOWL (mixing), GET FOIL, GO CHUTE (you end up in a curving corridor on level 1), S (into the lift), UP, N, E, S, E (kitchen), DROP BOWL, W, W (laundry), GET IRON, IRON FOIL (the crumpled cooking foil), DROP IRON, GET LINE (washing).
+PUSH SWITCH (it’s jammed on - need something to short it out), SHORT SWITCH (using the fork), CLIMB BELT (you finish up in the refuse compartment), GET BOWL (mixing), GET FOIL, GO CHUTE (you end up in a curving corridor on level 1), S (into the lift), UP, N, E, S, E (kitchen), DROP BOWL, W, W (laundry), GET IRON, IRON FOIL (the crumpled cooking foil), DROP IRON, GET LINE (washing).
 
 E, N, W, S (into the lift), STICK BUTTON (with the chewing gum), DROP GUM, UP (level 3, N, W, N, N, N, N (library), READ COOKBOOK (making pancakes), S, S, S, S, E, S (into the lift), DOWN, N. E, S, E (kitchen), EXAMINE SHELVES (you find a bag of flour), EXAMINE HOTPLATE (it’s on and hot), OPEN FRIDGE (you find a carton of milk), MAKE PANCAKE (using the mixing bowl, egg, flour and milk - you now have a bowl of pancake mixture), COOK PANCAKE, GET PANCAKE, W, N, W, S (into the lift), UP, N, E (walkway where the TV camera is), THROW PANCAKE (it covers the lens of the TV camera - you can now safely go north), E, N (power distribution room), PUSH SWITCH (you hear the feint sound of music), E (reactor room), GET HAMMER, W, S, W, DROP HAMMER, W, DROP PLAYER.
 

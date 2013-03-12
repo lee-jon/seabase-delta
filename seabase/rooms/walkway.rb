@@ -9,7 +9,7 @@ room(:walkway) do
   item(:brief_case, 'briefcase', 'case') do
     self.openable   = true
     self.short_desc = "A briefcase."
-    self.presence   = "Briefcase."
+    self.presence   = "Briefcase"
 
     item(:documents, 'documents') do
       self.desc = <<-DESC
@@ -33,9 +33,9 @@ room(:walkway) do
   item(:dead_body, 'body') do
     self.fixed = true
     self.short_desc = "Dead body."
-    self.presence   = "Dead body."
+    self.presence   = "Dead body"
     self.desc = "No signs of life - perhaps his pockets..."
-    self.script_take = <<-SCRIPT
+    self.script_get = <<-SCRIPT
       puts "Thanks-but NO THANKS!"
       return false
     SCRIPT

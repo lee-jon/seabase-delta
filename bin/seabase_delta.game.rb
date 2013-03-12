@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-07 18:39:46 +0000
+# Compiled 2013-03-12 13:47:01 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -47,8 +47,9 @@ class Player < Node
 end
 
 Node.root do
+self.title = "seabase"
 self.intro = "Seabase delta, classic 1984 game by Firebird software"
-self.help = "Use your 'ed Ed, & always EXAMINE things."
+self.help  = "Use your 'ed Ed, & always EXAMINE things."
 room(:airlock) do
   self.desc = "I am in the AIRLOCK."
   self.short_desc = "Airlock."
@@ -212,7 +213,7 @@ room(:deep_freeze) do
     self.chewed     = false
     
     self.script_chew = <<-SCRIPT
-      puts chewed ? "OK. Nothing happens." : "OK."
+      puts chewed ? "OK. Nothing happens." : "SLURP! Yum... Quite tasty!"
       self.short_desc = "Soft gooeey gum"
       self.desc = nil
       self.chewed = true
@@ -246,7 +247,7 @@ room(:deep_freeze) do
   end
 end
 room(:dinning_room) do
-  self.short_desc = "dinning_room"
+  self.short_desc = "dining_room"
   self.desc = <<-DESC
     The DINNING ROOM AREA. Walkways lead NORTH EAST and WEST.
   DESC
@@ -321,10 +322,36 @@ room(:fcorridor3) do
     Exits are to the east, west & south. There's an awful smell of 
     rubbish coming from somewhere!
   DESC
+  self.short_desc = "Corridor"
   
   self.exit_east  = :fcorridor2
   self.exit_west  = :fcorridor4
   self.exit_south = :food_store
+  
+  item(:switch, 'switch') do
+    self.presence = "switch"
+    self.desc = "Its marked LEFT and RIGHT"
+    self.short_desc = "Switch"
+  
+    self.script_push <<-SCRIPT
+      puts  self.children
+      puts "It's jammed on RIGHT. Maybe if I had some thing to SHORT the SWITCH"
+    SCRIPT
+  end
+  
+  scenery(:conveyor_belt, 'Conveyor Belt') do
+    self.presence = "conveyor belt"
+    self.desc = "It's quite big...maybe I should CLIMB on to it..."
+    self.going_right = true
+    
+    self.script_climb = <<-SCRIPT
+      if self.going_right = true
+        puts "WHOOPS..It's goinf the wrong way."
+        puts "I am thrown off!"
+      else
+      end
+    SCRIPT
+  end
 end
 room(:fcorridor4) do
   self.desc = <<-DESC
@@ -391,6 +418,26 @@ room(:food_store) do
         self.presence   = "Large brown egg"
         self.short_desc = "Large brown egg"
       end
+    end
+  end
+end
+room(:head_office) do
+  self.short_desc = "head_office"
+  self.desc = <<-DESC
+    ****H E A D - O F F I C E****<br>
+    A brightly lit passage leads off NORTH
+  DESC
+  
+  self.exit_south = :fcorridor4
+  
+  item(:auto_clerk, 'auto-clerk') do
+    self.presence = "auto-clerk"
+    self.desc = ""
+    
+    item(:officeslot, 'slot') do
+      self.fixed = true
+      self.short_desc = "small slot"
+      self.presence = "small slot"
     end
   end
 end
@@ -698,7 +745,7 @@ room(:void) do
       end
     SCRIPT
     item(:plastic_card, 'card', 'plastic') do
-      self.usage = 6
+      self.usage = 5
       self.desc = <<-DESC
         TRAVEL PERMIT issues to and for use of secret agent -
         SIGNED -"MAJOR I.RON.FOIL"
@@ -707,7 +754,6 @@ room(:void) do
       self.presence = "Plastic card"
       
       self.script_use = <<-SCRIPT
-        self.usage -= 1
         if args[0].nil?
           puts "Insert it where?"
           return false
@@ -718,7 +764,14 @@ room(:void) do
         elsif get_room.open
           puts get_room.short_desc
           return false
+        elsif usage == 0
+          puts "A metallic voice - SORRY - YOU HAVE USED"
+          puts " UP YOUR TRAVEL PERMIT - PLEASE REPORT TO"
+          puts "HEAD OFFICE & SIGN FOR NEW CARD - THANKYOU"
+          return false
         else
+          self.usage -= 1
+          
           puts "SHHHHH...sliding doors close."
           puts "The car hurtles along the tunnel at high speed"
           puts " and then jolts to a halt"
@@ -744,7 +797,7 @@ room(:walkway) do
   item(:brief_case, 'briefcase', 'case') do
     self.openable   = true
     self.short_desc = "A briefcase."
-    self.presence   = "Briefcase."
+    self.presence   = "Briefcase"
 
     item(:documents, 'documents') do
       self.desc = <<-DESC
@@ -768,9 +821,9 @@ room(:walkway) do
   item(:dead_body, 'body') do
     self.fixed = true
     self.short_desc = "Dead body."
-    self.presence   = "Dead body."
+    self.presence   = "Dead body"
     self.desc = "No signs of life - perhaps his pockets..."
-    self.script_take = <<-SCRIPT
+    self.script_get = <<-SCRIPT
       puts "Thanks-but NO THANKS!"
       return false
     SCRIPT

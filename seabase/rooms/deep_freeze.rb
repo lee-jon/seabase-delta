@@ -13,7 +13,7 @@ room(:deep_freeze) do
     self.chewed     = false
     
     self.script_chew = <<-SCRIPT
-      puts chewed ? "OK. Nothing happens." : "OK."
+      puts chewed ? "OK. Nothing happens." : "SLURP! Yum... Quite tasty!"
       self.short_desc = "Soft gooeey gum"
       self.desc = nil
       self.chewed = true

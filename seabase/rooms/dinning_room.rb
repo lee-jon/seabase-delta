@@ -1,5 +1,5 @@
 room(:dinning_room) do
-  self.short_desc = "dinning_room"
+  self.short_desc = "dining_room"
   self.desc = <<-DESC
     The DINNING ROOM AREA. Walkways lead NORTH EAST and WEST.
   DESC
