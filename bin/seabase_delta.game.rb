@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-12 15:15:06 +0000
+# Compiled 2013-03-12 15:46:45 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -32,17 +32,19 @@ class Player < Node
   def do_chew(*words)
     item = get_room.find(words)
     return if item.nil?
-    if item.script('chew')
-      puts "Sorry Ed, it's not possible to do that"
-    end
+    item.script('chew')
   end
   
   def do_blow(*words)
     item = get_room.find(words)
     return if item.nil?
-    if item.script('blow')
-      return
-    end
+    item.script('blow')
+  end
+  
+  def do_short(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('short')
   end
 end
 
@@ -337,10 +339,22 @@ room(:fcorridor3) do
       puts  self.children
       puts "It's jammed on RIGHT. Maybe if I had some thing to SHORT the SWITCH"
     SCRIPT
+    
+    self.script_short = <<-SCRIPT
+      if get_room.find(:fork)
+        puts "CRACK!! ZAPP!!"
+        get_root.move(:fork, :void)
+        get_root.move(:melted_metal, :fcorridor3)
+        
+        target = get_room.find(:conveyor_belt)
+        target.presence = "Conveyor belt (moving LEFT)"
+        target.going_right = false
+      end
+    SCRIPT
   end
   
   scenery(:conveyor_belt, 'conveyor') do
-    self.presence = "conveyor belt"
+    self.presence = "Conveyor belt (moving RIGHT)"
     self.desc = "It's quite big...maybe I should CLIMB on to it..."
     self.going_right = true
     
@@ -785,6 +799,10 @@ room(:void) do
         end
       SCRIPT
     end
+  end
+  
+  scenery(:melted_metal, 'metal') do
+    self.presence = "melted metal fork"
   end
 end
 room(:walkway) do

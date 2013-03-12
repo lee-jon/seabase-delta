@@ -19,10 +19,22 @@ room(:fcorridor3) do
       puts  self.children
       puts "It's jammed on RIGHT. Maybe if I had some thing to SHORT the SWITCH"
     SCRIPT
+    
+    self.script_short = <<-SCRIPT
+      if get_room.find(:fork)
+        puts "CRACK!! ZAPP!!"
+        get_root.move(:fork, :void)
+        get_root.move(:melted_metal, :fcorridor3)
+        
+        target = get_room.find(:conveyor_belt)
+        target.presence = "Conveyor belt (moving LEFT)"
+        target.going_right = false
+      end
+    SCRIPT
   end
   
-  scenery(:conveyor_belt, 'conveyor belt') do
-    self.presence = "conveyor belt"
+  scenery(:conveyor_belt, 'conveyor') do
+    self.presence = "Conveyor belt (moving RIGHT)"
     self.desc = "It's quite big...maybe I should CLIMB on to it..."
     self.going_right = true
     
@@ -31,7 +43,9 @@ room(:fcorridor3) do
         puts "WHOOPS..It's going the wrong way."
         puts "I am thrown off!"
       else
-        puts "OK."
+        puts "I am sitting on a sloping metal belt"
+        puts "OUCH! I've landed somewhere!"
+        get_root.move(:player, :refuse_compartment, false)
       end
     SCRIPT
   end

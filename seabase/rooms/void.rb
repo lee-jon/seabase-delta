@@ -67,4 +67,8 @@ room(:void) do
       SCRIPT
     end
   end
+  
+  scenery(:melted_metal, 'metal') do
+    self.presence = "melted metal fork"
+  end
 end

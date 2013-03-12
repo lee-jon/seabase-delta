@@ -30,6 +30,7 @@ task :build do
   game_file.close
 end
 
+# Syntax is rake room["roomname"]
 task :room, :arg1, :arg2 do |t, args|
   room_name = args[:arg1]
   file_name = "seabase/rooms/" + room_name + ".rb"
