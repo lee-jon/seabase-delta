@@ -27,4 +27,15 @@ class Player < Node
     return if item.nil?
     item.script('short')
   end
+  
+  def do_iron(*words)
+    if get_room.find(:steam_iron)
+      item = get_room.find(words)
+      return if item.nil?
+      item.script('iron')
+    else
+      puts "You do not have the iron"
+    end
+  end
 end
+

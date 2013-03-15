@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-15 09:20:05 +0000
+# Compiled 2013-03-15 09:42:04 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -46,7 +46,18 @@ class Player < Node
     return if item.nil?
     item.script('short')
   end
+  
+  def do_iron(*words)
+    if get_room.find(:steam_iron)
+      item = get_room.find(words)
+      return if item.nil?
+      item.script('iron')
+    else
+      puts "You do not have the iron"
+    end
+  end
 end
+
 
 Node.root do
 self.title = "seabase"
@@ -462,14 +473,23 @@ end
 room(:kitchen) do
   self.short_desc = "kitchen"
   self.desc = <<-DESC
-    
+    I am in a well ised KITCHEN. Exit is WEST.
   DESC
   
-  # Exits
+  self.exit_west = :dinning_room
   
-  # Logic
-  
-  # Items
+  item(:shelves, 'shelves') do
+    self.presence = "Shelves"
+    self.script_examine = <<-SCRIPT
+      #examining shows bag of flour
+    SCRIPT
+  end
+  item(:hotplate, 'hotplate') do
+    self.presence = "Hotplate"
+  end
+  item(:fridge, 'fridge') do
+    self.presence = "Fridge"
+  end
 end
 room(:laundry) do
   self.short_desc = "laundry"
@@ -486,7 +506,7 @@ room(:laundry) do
     self.desc = "Its ON and HOT!"
   end
   
-  item(:washing_line, 'washing line') do
+  item(:washing_line, 'line') do
     self.presence = "Washing line"
     self.desc = "It's LONG....but not that STRONG.."
   end
@@ -623,10 +643,17 @@ room(:refuse_compartment) do
     self.short_desc = "Old mixing bowl"
   end
   
-  item(:foil, 'foil', 'crumpled')  do
+  item(:foil, 'foil')  do
     self.presence   = 'Crumpled up aluminium cooking foil'
-    self.short_desc = "foil"
-    self.desc = "On reflection...It's..well..CRUMPLED!"    
+    self.short_desc = "Foil"
+    self.desc = "On reflection...It's..well..CRUMPLED!"
+    self.smooth = false
+    
+    self.script_iron = <<-SCRIPT
+      puts "You iron the foil"
+      self.desc = "Smooth sheet of Aluminium cooking foil."
+      self.smooth = true
+    SCRIPT
   end
     
   scenery(:chute, 'chute') do
@@ -635,7 +662,7 @@ room(:refuse_compartment) do
     self.script_enter = <<-SCRIPT
       puts "Wheeeeee!!!"
       puts "OUCH! I've landed somewhere!"
-      get_root.move(:player, :corridor3, false)
+      get_root.move(:player, :corridor4, false)
       return false
     SCRIPT
   end

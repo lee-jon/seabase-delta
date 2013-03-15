@@ -10,10 +10,17 @@ room(:refuse_compartment) do
     self.short_desc = "Old mixing bowl"
   end
   
-  item(:foil, 'foil', 'crumpled')  do
+  item(:foil, 'foil')  do
     self.presence   = 'Crumpled up aluminium cooking foil'
-    self.short_desc = "foil"
-    self.desc = "On reflection...It's..well..CRUMPLED!"    
+    self.short_desc = "Foil"
+    self.desc = "On reflection...It's..well..CRUMPLED!"
+    self.smooth = false
+    
+    self.script_iron = <<-SCRIPT
+      puts "You iron the foil"
+      self.desc = "Smooth sheet of Aluminium cooking foil."
+      self.smooth = true
+    SCRIPT
   end
     
   scenery(:chute, 'chute') do

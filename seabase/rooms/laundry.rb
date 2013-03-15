@@ -13,7 +13,7 @@ room(:laundry) do
     self.desc = "Its ON and HOT!"
   end
   
-  item(:washing_line, 'washing line') do
+  item(:washing_line, 'line') do
     self.presence = "Washing line"
     self.desc = "It's LONG....but not that STRONG.."
   end
