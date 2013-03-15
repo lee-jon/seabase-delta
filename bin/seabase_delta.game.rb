@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-12 15:46:45 +0000
+# Compiled 2013-03-15 09:20:05 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -363,8 +363,11 @@ room(:fcorridor3) do
         puts "WHOOPS..It's going the wrong way."
         puts "I am thrown off!"
       else
-        puts "OK."
+        puts "I am sitting on a sloping metal belt"
+        puts "OUCH! I've landed somewhere!"
+        get_root.move(:player, :refuse_compartment, false)
       end
+      return false
     SCRIPT
   end
 end
@@ -606,6 +609,39 @@ room(:missile_room) do
   item(:keyboard, 'keyboard', 'small') do
     self.fixed = true
     self.presence = "Small keyboard"
+  end
+end
+room(:refuse_compartment) do
+  self.desc = <<-DESC
+    "I am in the smelly REFUSE COMPARTMENT."
+  DESC
+  
+  # Exits - none
+  
+  item(:bowl, 'bowl', 'mixing') do
+    self.presence   = "Old mixing bowl"
+    self.short_desc = "Old mixing bowl"
+  end
+  
+  item(:foil, 'foil', 'crumpled')  do
+    self.presence   = 'Crumpled up aluminium cooking foil'
+    self.short_desc = "foil"
+    self.desc = "On reflection...It's..well..CRUMPLED!"    
+  end
+    
+  scenery(:chute, 'chute') do
+    self.presence = "Large metal chute (Sloping down)"
+    
+    self.script_enter = <<-SCRIPT
+      puts "Wheeeeee!!!"
+      puts "OUCH! I've landed somewhere!"
+      get_root.move(:player, :corridor3, false)
+      return false
+    SCRIPT
+  end
+  
+  scenery(:conveyor_belt2, 'conveyor') do
+    self.presence = "Conveyor belt"
   end
 end
 room(:station_alpha) do

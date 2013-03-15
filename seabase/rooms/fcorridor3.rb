@@ -47,6 +47,7 @@ room(:fcorridor3) do
         puts "OUCH! I've landed somewhere!"
         get_root.move(:player, :refuse_compartment, false)
       end
+      return false
     SCRIPT
   end
 end
