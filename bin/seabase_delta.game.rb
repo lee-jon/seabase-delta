@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-15 09:42:04 +0000
+# Compiled 2013-03-15 20:20:56 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -323,7 +323,7 @@ room(:fcorridor2) do
   self.exit_south = :dinning_room
   self.exit_north = :surgery
   self.exit_east  = :fcorridor3
-  self.exit_west  = :fcorridor4
+  self.exit_west  = :fcorridor1
   
   # Logic
   
@@ -337,8 +337,8 @@ room(:fcorridor3) do
   DESC
   self.short_desc = "Corridor"
   
-  self.exit_east  = :fcorridor2
-  self.exit_west  = :fcorridor4
+  self.exit_east  = :fcorridor4
+  self.exit_west  = :fcorridor2
   self.exit_south = :food_store
   
   item(:switch, 'switch') do
@@ -388,8 +388,8 @@ room(:fcorridor4) do
     brightly lit Walk-way south.
   DESC
   
-  self.exit_east  = :fcorridor3
-  self.exit_west  = :fcorridor1
+  self.exit_east  = :fcorridor1
+  self.exit_west  = :fcorridor3
   self.exit_south = :head_office
 end
 room(:food_farm) do
@@ -457,7 +457,7 @@ room(:head_office) do
     A brightly lit passage leads off NORTH
   DESC
   
-  self.exit_south = :fcorridor4
+  self.exit_north = :fcorridor4
   
   item(:auto_clerk, 'auto-clerk') do
     self.presence = "auto-clerk"

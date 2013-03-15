@@ -4,7 +4,7 @@ room(:fcorridor4) do
     brightly lit Walk-way south.
   DESC
   
-  self.exit_east  = :fcorridor3
-  self.exit_west  = :fcorridor1
+  self.exit_east  = :fcorridor1
+  self.exit_west  = :fcorridor3
   self.exit_south = :head_office
 end

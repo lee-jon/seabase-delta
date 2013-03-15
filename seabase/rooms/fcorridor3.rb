@@ -6,8 +6,8 @@ room(:fcorridor3) do
   DESC
   self.short_desc = "Corridor"
   
-  self.exit_east  = :fcorridor2
-  self.exit_west  = :fcorridor4
+  self.exit_east  = :fcorridor4
+  self.exit_west  = :fcorridor2
   self.exit_south = :food_store
   
   item(:switch, 'switch') do

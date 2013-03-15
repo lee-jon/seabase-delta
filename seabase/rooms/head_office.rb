@@ -5,7 +5,7 @@ room(:head_office) do
     A brightly lit passage leads off NORTH
   DESC
   
-  self.exit_south = :fcorridor4
+  self.exit_north = :fcorridor4
   
   item(:auto_clerk, 'auto-clerk') do
     self.presence = "auto-clerk"
