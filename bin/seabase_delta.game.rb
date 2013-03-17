@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-17 16:32:49 +0000
+# Compiled 2013-03-17 16:43:57 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -605,7 +605,8 @@ room(:lift1d) do
   
   self.accessible = false
 
-  self.exit_down = :lift1b
+  self.exit_down  = :lift1b
+  self.exit_north = :third_level_corridor
 
   item(:lift1d_buttons, 'button') do
     fixed = true
@@ -646,17 +647,6 @@ room(:lift2) do
     fixed = true
     self.presence = "Row of buttons"    
   end
-end
-room(:lift1e) do
-  self.short_desc = "lift1e"
-  self.desc = <<-DESC
-    
-  DESC
-  
-  self.script_enter = <<-SCRIPT
-    puts "Top floor!"
-    return false
-  SCRIPT
 end
 room(:missile_room) do
   self.exit_south = :station_echo
@@ -844,6 +834,23 @@ room(:surgery) do
     self.desc = <<-DESC
       104 degrees! Wow! This adventure must have really fired
       your imagination!
+    DESC
+  end
+end
+room(:third_level_corridor) do
+  self.desc = <<-DESC
+    I've reached the THIRD LEVEL in a TWISTING TUBULAR WALKWAY leading
+    EAST/WEST. A small compartment is NORTH. SOUTH leads into the LIFT.
+  DESC
+  
+  self.exit_south = :lift1d
+  #NEW to do N E W
+  
+  self.scenery(:glass_case, 'glass') do
+    self.presence = "Glass case"
+    self.desc = <<-DESC
+      IN CASE OF DESPERATE FRUSTRATION<br>
+      *BREAK GLASS*
     DESC
   end
 end

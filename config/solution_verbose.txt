@@ -8,4 +8,4 @@ Walk Through by Dorothy Millard (C64 Version)
 
 E (curving east/west corridor), READ SIGN (in case of elevator breakdown contact “MISS ISLES ON 199” - note this number), E, N (electronic workshop), GET TAPE PLAYER, S, E, S (into sea-base lift No.1), PUSH BUTTON (up or down?), UP (second level), N, E, S, W, W (deep freeze), GET GUM (bubble), E, E (dining room), GET FORK, N, E, S, (food store), EXAMINE WICKER CAGE (you see a hen), EXAMINE HEN (it’s asleep), CHEW GUM, BLOW BUBBLE (it bursts and wakes the hen who lays an egg), GET EGG, N (corridor), PUSH SWITCH (it’s jammed on - need something to short it out), SHORT SWITCH (using the fork), CLIMB BELT (you finish up in the refuse compartment), GET BOWL (mixing), GET FOIL, GO CHUTE (you end up in a curving corridor on level 1), S (into the lift), UP, N, E, S, E (kitchen), DROP BOWL, W, W (laundry), GET IRON, IRON FOIL (the crumpled cooking foil), DROP IRON, GET LINE (washing).
 
-E, N, W, S (into the lift), 
+E, N, W, S (into the lift), STICK BUTTON (with the chewing gum), DROP GUM, UP (level 3, N, W, N, N, N, N (library), 
