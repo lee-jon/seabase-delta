@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-15 20:20:56 +0000
+# Compiled 2013-03-17 16:32:49 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -54,6 +54,23 @@ class Player < Node
       item.script('iron')
     else
       puts "You do not have the iron"
+    end
+  end
+  
+  def do_stick(*words)
+    return unless get_room.find(:lift1b_buttons)
+    item = get_room.find(:stick_of_gum)
+    
+    if item.nil?
+      puts "Stick what exactly?"
+      return 
+    end
+    
+    if item.chewed == true
+      puts "SPLAT! GUM sticks the Button in.."
+      get_root.find(:lift1d).accessible = true
+    else
+      puts "The gum is hard." #TODO get official text
     end
   end
 end
@@ -233,6 +250,8 @@ room(:deep_freeze) do
 
       return false
     SCRIPT
+    
+    self.script_
     
     scenery(:bubble, 'bubble') do
       # This is here to execute the blow bubble verb
@@ -504,11 +523,13 @@ room(:laundry) do
   item(:steam_iron, 'iron') do
     self.presence = "Steam-Iron"
     self.desc = "Its ON and HOT!"
+    self.short_desc = "Iron"
   end
   
   item(:washing_line, 'line') do
     self.presence = "Washing line"
     self.desc = "It's LONG....but not that STRONG.."
+    self.short_desc = "Washing line"
   end
 end
 room(:lift1) do
@@ -539,6 +560,11 @@ room(:lift1) do
     puts "Shhh doors close. Lift ascends."
     puts "Doors open."
   SCRIPT
+  
+  self.script_down = <<-SCRIPT
+    puts "Bottom floor!"
+    return false
+  SCRIPT
 end
 room(:lift1b) do
   self.short_desc = "Lift no. 1"
@@ -565,6 +591,7 @@ room(:lift1c) do
   self.desc = <<-DESC    
   DESC
   
+  #TODO This shoud be removed
   self.script_enter = <<-ENTER
     puts "Bottom floor\n"
     return false
@@ -575,13 +602,28 @@ room(:lift1d) do
   self.desc = <<-DESC
     Top floor lift
   DESC
+  
+  self.accessible = false
 
   self.exit_down = :lift1b
 
+  item(:lift1d_buttons, 'button') do
+    fixed = true
+    self.presence = "Row of buttons"
+    self.script_push = <<-SCRIPT
+      puts "Which one... UP or DOWN"
+    SCRIPT
+  end
+
   self.script_enter = <<-SCRIPT
-    puts "PING! OH BLOW! button keeps popping out!
-    puts "I need something to STICK it.."
-    return false
+    if self.accessible != true
+      puts "PING! OH BLOW! button keeps popping out!"
+      puts "I need something to STICK it.."
+      return false
+    else
+      puts "Lift goes up"
+      return true
+    end
   SCRIPT
 end
 
@@ -604,6 +646,17 @@ room(:lift2) do
     fixed = true
     self.presence = "Row of buttons"    
   end
+end
+room(:lift1e) do
+  self.short_desc = "lift1e"
+  self.desc = <<-DESC
+    
+  DESC
+  
+  self.script_enter = <<-SCRIPT
+    puts "Top floor!"
+    return false
+  SCRIPT
 end
 room(:missile_room) do
   self.exit_south = :station_echo

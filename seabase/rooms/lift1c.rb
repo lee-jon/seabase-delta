@@ -3,6 +3,7 @@ room(:lift1c) do
   self.desc = <<-DESC    
   DESC
   
+  #TODO This shoud be removed
   self.script_enter = <<-ENTER
     puts "Bottom floor\n"
     return false

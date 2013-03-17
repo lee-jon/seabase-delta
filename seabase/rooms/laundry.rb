@@ -11,10 +11,12 @@ room(:laundry) do
   item(:steam_iron, 'iron') do
     self.presence = "Steam-Iron"
     self.desc = "Its ON and HOT!"
+    self.short_desc = "Iron"
   end
   
   item(:washing_line, 'line') do
     self.presence = "Washing line"
     self.desc = "It's LONG....but not that STRONG.."
+    self.short_desc = "Washing line"
   end
 end

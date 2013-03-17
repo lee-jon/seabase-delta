@@ -37,5 +37,22 @@ class Player < Node
       puts "You do not have the iron"
     end
   end
+  
+  def do_stick(*words)
+    return unless get_room.find(:lift1b_buttons)
+    item = get_room.find(:stick_of_gum)
+    
+    if item.nil?
+      puts "Stick what exactly?"
+      return 
+    end
+    
+    if item.chewed == true
+      puts "SPLAT! GUM sticks the Button in.."
+      get_root.find(:lift1d).accessible = true
+    else
+      puts "The gum is hard." #TODO get official text
+    end
+  end
 end
 

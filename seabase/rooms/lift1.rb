@@ -26,4 +26,9 @@ room(:lift1) do
     puts "Shhh doors close. Lift ascends."
     puts "Doors open."
   SCRIPT
+  
+  self.script_down = <<-SCRIPT
+    puts "Bottom floor!"
+    return false
+  SCRIPT
 end

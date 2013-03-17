@@ -21,6 +21,8 @@ room(:deep_freeze) do
       return false
     SCRIPT
     
+    self.script_
+    
     scenery(:bubble, 'bubble') do
       # This is here to execute the blow bubble verb
       self.script_blow = <<-BLOW
