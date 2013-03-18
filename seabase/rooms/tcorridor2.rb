@@ -1,4 +1,4 @@
-room(:third_level_corridor) do
+room(:tcorridor2) do
   self.desc = <<-DESC
     I've reached the THIRD LEVEL in a TWISTING TUBULAR WALKWAY leading
     EAST/WEST. A small compartment is NORTH. SOUTH leads into the LIFT.

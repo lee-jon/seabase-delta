@@ -7,7 +7,7 @@ room(:lift1d) do
   self.accessible = false
 
   self.exit_down  = :lift1b
-  self.exit_north = :third_level_corridor
+  self.exit_north = :tcorridor2
 
   item(:lift1d_buttons, 'button') do
     fixed = true
