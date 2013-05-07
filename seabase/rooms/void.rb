@@ -1,3 +1,5 @@
+# The void room is a place to put all the nodes which have no natural place
+# in the game world. 
 room(:void) do
   self.desc = "You are in the void - how did you get here?"
   self.short_desc = "The Void"
@@ -83,5 +85,7 @@ room(:void) do
   end
   
   item(:pancake, 'pancake') do
+    self.presence   = "Pancake"
+    self.short_desc = "Pancake"
   end
 end
