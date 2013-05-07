@@ -5,7 +5,7 @@ room(:tcorridor3) do
   DESC
   
   self.exit_west = :tcorridor2
-  #self.exit_north = :huge_passage
+  self.exit_north = :computer_room
   #self.exit_east = :tcorridor4
   
   item(:tv_camera, 'camera', 'tv') do

@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-05-07 19:49:39 +0100
+# Compiled 2013-05-07 23:30:52 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -988,6 +988,30 @@ room(:tcorridor2) do
     # TODO: Break glass
   end
 end
+room(:tcorridor3) do
+  self.desc = <<-DESC
+    The WALKWAY seems to get steeper here as it continues EAST & WEST. There's 
+    a HUGE PASSAGE to the NORTH.
+  DESC
+  
+  self.exit_west = :tcorridor2
+  #self.exit_north = :huge_passage
+  #self.exit_east = :tcorridor4
+  
+  item(:tv_camera, 'camera', 'tv') do
+    self.presence = "TV Camera"
+    self.desc = <<-DESC
+      The LENS seems to be scanning along that CORRIDOR to the NORTH.
+      I don't like the look of that.
+    DESC
+
+    self.covered = false
+  end
+  
+  # self.script_north = <<-SCRIPT
+end
+# The void room is a place to put all the nodes which have no natural place
+# in the game world. 
 room(:void) do
   self.desc = "You are in the void - how did you get here?"
   self.short_desc = "The Void"
@@ -1073,6 +1097,8 @@ room(:void) do
   end
   
   item(:pancake, 'pancake') do
+    self.presence   = "Pancake"
+    self.short_desc = "Pancake"
   end
 end
 room(:walkway) do
