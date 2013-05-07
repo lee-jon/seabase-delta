@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-05-07 23:30:52 +0100
+# Compiled 2013-05-07 23:34:00 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -184,6 +184,21 @@ room(:carriage) do
     self.short_desc = "small slot."
     self.presence = "small slot"
   end
+end
+room(:computer_room) do
+  self.desc = <<-DESC
+    
+  DESC
+  
+  self.exit_south = :tcorridor3
+  
+  self.script_enter = <<-SCRIPT
+    if get_root.find(:tv_camera).covered == true
+      return true
+    else
+      return false
+    end
+  SCRIPT
 end
 room(:corridor1) do
   self.exit_north = :station_beta
@@ -995,7 +1010,7 @@ room(:tcorridor3) do
   DESC
   
   self.exit_west = :tcorridor2
-  #self.exit_north = :huge_passage
+  self.exit_north = :computer_room
   #self.exit_east = :tcorridor4
   
   item(:tv_camera, 'camera', 'tv') do
