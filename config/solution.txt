@@ -120,7 +120,7 @@ north
 east
 
 
-E (walkway where the TV camera is), THROW PANCAKE (it covers the lens of the TV camera - you can now safely go north), E, N (power distribution room), PUSH SWITCH (you hear the feint sound of music), E (reactor room), GET HAMMER, W, S, W, DROP HAMMER, W, DROP PLAYER.
+THROW PANCAKE (it covers the lens of the TV camera - you can now safely go north), E, N (power distribution room), PUSH SWITCH (you hear the feint sound of music), E (reactor room), GET HAMMER, W, S, W, DROP HAMMER, W, DROP PLAYER.
 
 W, N (living quarters), OPEN BUREAU, GET PEN (fountain pen), W (dental surgery), GET PINCERS (dental), E, N, N, N, W (music room - you hear the song "With a barrel of laughs and what the spirits advise. We’re going hammer and nails, to get our bodies to rise ..."), EXAMINE LOUDSPEAKER (it has a loose magnet), UNSCREW MAGNET (with the screwdriver - could help you get to the bottom of a problem), DROP SCREWDRIVER, GET MAGNET, E, S, S, S, S, E, N (armoury), GET SPEARGUN, S, S (into the lift), DOWN, N, N (gas bottle storage), GET BOTTLE (air), S, S (into the lift), DOWN, N, E, DROP LINE, DROP MAGNET, GET SUIT, N, EXAMINE BOTTLE (it has a hose attached), EXAMINE SUIT (it has a hose attached), CONNECT HOSE (you connect up the air supply and slip on the suit), OPEN HATCH, GO HATCH (it slams shut behind you), READ SIGN (automatic air-lock), TURN WHEEL (the airlock fills with water and you are ejected… you are swimming around in the murky depths), FIRE SPEARGUN (it gets the octopus in the eye), FILL PEN (with the octopus ink), GET PEN, GO HATCH, TURN WHEE.
 
