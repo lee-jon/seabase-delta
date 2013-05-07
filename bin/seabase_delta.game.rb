@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-03-17 16:43:57 +0000
+# Compiled 2013-05-07 19:49:39 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -71,6 +71,34 @@ class Player < Node
       get_root.find(:lift1d).accessible = true
     else
       puts "The gum is hard." #TODO get official text
+    end
+  end
+  
+  # Verb for making pancake - to be refactored and made generic if 
+  # Note uses get ROOT, not get_room method
+  def do_make(*words)
+    item = get_root.find(words)
+    
+    if get_room.find(:milk) && get_room.find(:flour) && get_room.find(:bowl)
+      puts "Dolup, Slop, Slush!"
+      get_root.move(:milk, :void)
+      get_root.move(:bowl, :void)
+      get_root.move(:flour, :void)
+      get_root.move(:bowl_of_mixture, parent, false)
+    else
+      puts "Its not possible to do that" #TODO: Make this canonical
+      return
+    end
+  end
+  
+  def do_cook(*words)
+    item = get_root.find(words)
+    if get_room.find(:bowl_of_mixture) && get_room.find(:hotplate)
+      get_root.move(:bowl_of_mixture, :void)
+      get_root.move(:bowl, parent, false)
+      get_root.move(:pancake, parent, false)
+    else
+      return false
     end
   end
 end
@@ -343,10 +371,6 @@ room(:fcorridor2) do
   self.exit_north = :surgery
   self.exit_east  = :fcorridor3
   self.exit_west  = :fcorridor1
-  
-  # Logic
-  
-  # Items
 end
 room(:fcorridor3) do
   self.desc = <<-DESC
@@ -490,24 +514,41 @@ room(:head_office) do
   end
 end
 room(:kitchen) do
-  self.short_desc = "kitchen"
   self.desc = <<-DESC
-    I am in a well ised KITCHEN. Exit is WEST.
+    I am in a well used KITCHEN. Exit is WEST.
   DESC
   
   self.exit_west = :dinning_room
   
   item(:shelves, 'shelves') do
     self.presence = "Shelves"
+    self.examined = false
     self.script_examine = <<-SCRIPT
-      #examining shows bag of flour
+      if self.examined == false
+        puts "I see something..."
+        
+        get_root.move(:flour, parent, false)
+        self.examined = true
+        
+        return false
+      else
+        return true
+      end
     SCRIPT
   end
+  
   item(:hotplate, 'hotplate') do
     self.presence = "Hotplate"
+    self.desc = "Its ON and HOT!"
   end
+  
   item(:fridge, 'fridge') do
     self.presence = "Fridge"
+    self.openable = true
+    
+    item(:milk, 'milk', 'carton') do
+      self.presence = 'Carton of Milk'
+    end
   end
 end
 room(:laundry) do
@@ -530,6 +571,27 @@ room(:laundry) do
     self.presence = "Washing line"
     self.desc = "It's LONG....but not that STRONG.."
     self.short_desc = "Washing line"
+  end
+end
+room(:library) do
+  self.short_desc = "library"
+  self.desc = <<-DESC
+    This is the LIBRARY. Exits lead WEST and SOUTH.
+  DESC
+  
+  self.exit_south = :shower_room
+  self.exit_west  
+
+  item(:cookbook, "cookbook") do
+    self.presence = "Cookbook"
+    self.fixed    = true
+    self.desc     = '"MAKING PANCAKES" by LEN SCOVER'
+    self.read     = false 
+    
+    self.script_examine = <<-SCRIPT
+      self.desc
+      self.read = true
+    SCRIPT
   end
 end
 room(:lift1) do
@@ -606,7 +668,7 @@ room(:lift1d) do
   self.accessible = false
 
   self.exit_down  = :lift1b
-  self.exit_north = :third_level_corridor
+  self.exit_north = :tcorridor2
 
   item(:lift1d_buttons, 'button') do
     fixed = true
@@ -646,6 +708,23 @@ room(:lift2) do
   item(:lift2_buttons, 'buttons') do
     fixed = true
     self.presence = "Row of buttons"    
+  end
+end
+room(:living_quarters) do
+  self.desc = <<-DESC
+    The Base takes on a more homely appearance as in the LIVING QUARTERS.
+    Exits go NORTH, SOUTH, EAST and WEST
+  DESC
+  
+  self.exit_north = :restroom
+  self.exit_south = :tcorridor1
+  
+  # Logic
+  
+  item(:writing_bureau, 'writing', 'bureau') do
+    self.presence = "Writing bureau"
+    self.fixed    = true
+    self.openable = true
   end
 end
 room(:missile_room) do
@@ -712,6 +791,42 @@ room(:refuse_compartment) do
   
   scenery(:conveyor_belt2, 'conveyor') do
     self.presence = "Conveyor belt"
+  end
+end
+room(:restroom) do
+  self.short_desc = "restroom"
+  self.desc = <<-DESC
+    I've entered a cosy looking RESTROOM. 
+    There's a damp tunnel to the NORTH and a 
+    Walk-tube to the SOUTH.
+  DESC
+  
+  self.exit_north = :shower_room
+  self.exit_south = :living_quarters
+  
+  item(:games_machine, 'video') do
+    self.presence = "Video games machine"
+    self.desc     = "Insert DISC for PLAY"
+    self.fixed    = true
+  end
+  
+  item(:joystick, 'joystick') do
+    self.presence = 'Joystick'
+    self.desc     = 'Try PUSHING & PULLING it...'
+    self.fixed    = true
+  end
+end
+room(:shower_room) do
+  self.desc = <<-DESC
+    I am in the SHOWER-ROOM. The exits are NORTH and SOUTH.
+  DESC
+  
+  self.exit_north = :library
+  self.exit_south = :restroom
+  
+  scenery(:tap, 'tap') do
+    self.presence = 'Tap'
+    self.short_desc = 'Tap'
   end
 end
 room(:station_alpha) do
@@ -837,13 +952,31 @@ room(:surgery) do
     DESC
   end
 end
-room(:third_level_corridor) do
+room(:tcorridor1) do
+  self.short_desc = "tcorridor1"
+  self.desc = <<-DESC
+    The TWISTING WALKWAY meets a junctino of TUBES leading NORTH, SOUTH, EAST
+    and WEST.
+  DESC
+  
+  self.exit_north = :living_quarters
+  self.exit_east  = :tcorridor2
+  
+  # Logic
+  
+  item(:microphone, 'microphone') do
+    self.presence = "Microphone"
+    self.fixed = true
+  end
+end
+room(:tcorridor2) do
   self.desc = <<-DESC
     I've reached the THIRD LEVEL in a TWISTING TUBULAR WALKWAY leading
     EAST/WEST. A small compartment is NORTH. SOUTH leads into the LIFT.
   DESC
   
   self.exit_south = :lift1d
+  self.exit_west  = :tcorridor1
   #NEW to do N E W
   
   self.scenery(:glass_case, 'glass') do
@@ -852,6 +985,7 @@ room(:third_level_corridor) do
       IN CASE OF DESPERATE FRUSTRATION<br>
       *BREAK GLASS*
     DESC
+    # TODO: Break glass
   end
 end
 room(:void) do
@@ -926,6 +1060,19 @@ room(:void) do
   
   scenery(:melted_metal, 'metal') do
     self.presence = "melted metal fork"
+  end
+  
+  item(:flour, "flour", "bag of") do
+    self.presence   = "Bag of Flour"
+    self.short_desc = "Bag of Flour"
+  end
+  
+  item(:bowl_of_mixture, 'bowl', 'mixture') do
+    self.presence   = "Bowl of pancake mixture"
+    self.short_desc = "Bowl of pancake mixture"
+  end
+  
+  item(:pancake, 'pancake') do
   end
 end
 room(:walkway) do

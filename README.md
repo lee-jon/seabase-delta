@@ -8,6 +8,9 @@ game back in the mid 80s and it was really my first foray into Adventure games.
 The game was built to run on the [IF](http://github.com/lee-jon/if) game engine
 built in ruby.
 
+## Status
+Currently around 40-50% of the game is implemented. I'm working through it just for fun. Hope the first few rooms bring back some memories!
+
 ## Installation
 You will need a running version of the [ruby](http://www.ruby-lang.org/en/downloads/) programming languauge.
 

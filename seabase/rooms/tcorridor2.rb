@@ -5,6 +5,7 @@ room(:tcorridor2) do
   DESC
   
   self.exit_south = :lift1d
+  self.exit_west  = :tcorridor1
   #NEW to do N E W
   
   self.scenery(:glass_case, 'glass') do
@@ -13,5 +14,6 @@ room(:tcorridor2) do
       IN CASE OF DESPERATE FRUSTRATION<br>
       *BREAK GLASS*
     DESC
+    # TODO: Break glass
   end
 end

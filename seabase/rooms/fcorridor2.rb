@@ -10,8 +10,4 @@ room(:fcorridor2) do
   self.exit_north = :surgery
   self.exit_east  = :fcorridor3
   self.exit_west  = :fcorridor1
-  
-  # Logic
-  
-  # Items
 end

@@ -54,5 +54,33 @@ class Player < Node
       puts "The gum is hard." #TODO get official text
     end
   end
+  
+  # Verb for making pancake - to be refactored and made generic if 
+  # Note uses get ROOT, not get_room method
+  def do_make(*words)
+    item = get_root.find(words)
+    
+    if get_room.find(:milk) && get_room.find(:flour) && get_room.find(:bowl)
+      puts "Dolup, Slop, Slush!"
+      get_root.move(:milk, :void)
+      get_root.move(:bowl, :void)
+      get_root.move(:flour, :void)
+      get_root.move(:bowl_of_mixture, parent, false)
+    else
+      puts "Its not possible to do that" #TODO: Make this canonical
+      return
+    end
+  end
+  
+  def do_cook(*words)
+    item = get_root.find(words)
+    if get_room.find(:bowl_of_mixture) && get_room.find(:hotplate)
+      get_root.move(:bowl_of_mixture, :void)
+      get_root.move(:bowl, parent, false)
+      get_root.move(:pancake, parent, false)
+    else
+      return false
+    end
+  end
 end
 

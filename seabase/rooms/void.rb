@@ -71,4 +71,17 @@ room(:void) do
   scenery(:melted_metal, 'metal') do
     self.presence = "melted metal fork"
   end
+  
+  item(:flour, "flour", "bag of") do
+    self.presence   = "Bag of Flour"
+    self.short_desc = "Bag of Flour"
+  end
+  
+  item(:bowl_of_mixture, 'bowl', 'mixture') do
+    self.presence   = "Bowl of pancake mixture"
+    self.short_desc = "Bowl of pancake mixture"
+  end
+  
+  item(:pancake, 'pancake') do
+  end
 end
