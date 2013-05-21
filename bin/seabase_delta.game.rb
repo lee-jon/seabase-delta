@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-05-07 23:34:00 +0100
+# Compiled 2013-05-21 10:18:43 +0100
 
 class Player < Node
   def do_fasten(*words)
