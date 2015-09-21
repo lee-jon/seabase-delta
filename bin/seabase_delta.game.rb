@@ -15,7 +15,7 @@
 # he must discover its secrets and escape.
 
 
-# Compiled 2013-05-21 10:18:43 +0100
+# Compiled 2015-09-21 20:23:01 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -23,6 +23,7 @@ class Player < Node
     return if item.nil?
     item.script('fastern')
   end
+
   def do_unfasten(*words)
     item = get_room.find(words)
     return if item.nil?
@@ -34,19 +35,55 @@ class Player < Node
     return if item.nil?
     item.script('chew')
   end
-  
+
+  def do_unscrew(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('unscrew')
+  end
+
   def do_blow(*words)
     item = get_room.find(words)
     return if item.nil?
     item.script('blow')
   end
-  
+
+  def do_throw(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('throw')
+  end
+
+  def do_turn(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('turn')
+  end
+
   def do_short(*words)
     item = get_room.find(words)
     return if item.nil?
     item.script('short')
   end
-  
+
+  def do_fire(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('fire')
+  end
+
+  def do_fill(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('fill')
+  end
+
+  def do_sign(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('sign')
+  end
+
   def do_iron(*words)
     if get_room.find(:steam_iron)
       item = get_room.find(words)
@@ -56,16 +93,37 @@ class Player < Node
       puts "You do not have the iron"
     end
   end
-  
+
+  def do_wear(*thing)
+    thing = get_room.find(thing)
+
+    return if thing.nil?
+    if !thing.wearable
+      puts "You cannot wear that"
+
+      return
+    end
+
+    if thing.parent.tag == :player
+      puts "You wear #{thing.short_desc}"
+
+      thing.short_desc << " (worn)"
+      thing.worn  = true
+      thing.fixed = true
+    else
+      puts "You are not carrying this."
+    end
+  end
+
   def do_stick(*words)
     return unless get_room.find(:lift1b_buttons)
     item = get_room.find(:stick_of_gum)
-    
+
     if item.nil?
       puts "Stick what exactly?"
-      return 
+      return
     end
-    
+
     if item.chewed == true
       puts "SPLAT! GUM sticks the Button in.."
       get_root.find(:lift1d).accessible = true
@@ -73,24 +131,25 @@ class Player < Node
       puts "The gum is hard." #TODO get official text
     end
   end
-  
-  # Verb for making pancake - to be refactored and made generic if 
+
+  # Verb for making pancake - to be refactored and made generic if
   # Note uses get ROOT, not get_room method
   def do_make(*words)
     item = get_root.find(words)
-    
-    if get_room.find(:milk) && get_room.find(:flour) && get_room.find(:bowl)
+
+    if get_room.find(:milk) && get_room.find(:flour) && get_room.find(:bowl) && get_room.find(:egg)
       puts "Dolup, Slop, Slush!"
       get_root.move(:milk, :void)
       get_root.move(:bowl, :void)
       get_root.move(:flour, :void)
+      get_root.move(:egg, :void)
       get_root.move(:bowl_of_mixture, parent, false)
     else
       puts "Its not possible to do that" #TODO: Make this canonical
       return
     end
   end
-  
+
   def do_cook(*words)
     item = get_root.find(words)
     if get_room.find(:bowl_of_mixture) && get_room.find(:hotplate)
@@ -101,27 +160,124 @@ class Player < Node
       return false
     end
   end
-end
 
+  def do_connect(*words)
+    if words[0] != "hose"
+      puts "I do not know how to connect that"
+      return false
+    else
+      if get_room.find(:air_bottle) && get_room.find(:diving_suit)
+        puts "You connect up the air supply and slip on the SUIT....."
+        get_root.move(:diving_suit, :void)
+        get_root.move(:air_bottle, :void)
+
+        get_root.move(:connected_suit, self)
+      else
+        puts "Not sure what you mean" #TODO: get actual text here
+      end
+    end
+  end
+end
 
 Node.root do
 self.title = "seabase"
 self.intro = "Seabase delta, classic 1984 game by Firebird software"
 self.help  = "Use your 'ed Ed, & always EXAMINE things."
 room(:airlock) do
-  self.desc = "I am in the AIRLOCK."
-  self.short_desc = "Airlock."
+  self.desc = "I am in the AIRLOCK. There's a dull silence in this cramped dingy compartment."
+  self.short_desc = "Airlock"
+
+  self.empty = true
+
   item(:wheel, 'wheel') do
-    self.presence = "Wheel"
+    self.presence = "Large wheel"
+    self.fixed = true
+
+    self.script_turn = <<-SCRIPT
+      if get_room.empty
+        if get_room.find(:connected_suit)
+          get_room.empty = false
+
+          puts "AIRLOCK fills with seawater"
+          puts "Metallic voice says- 'Standby for EJECT'"
+          puts "WHOOSHH!"
+          puts ""
+
+          get_root.move(:player, :murky_depths, false)
+
+        else
+          puts "AIRLOCK fills with seawater. CHOKE! GASP! NO AIR....I'M DROWING"
+          puts "AAAARGH"
+          puts ""
+          puts "GAME OVER"
+          get_root.move(:player, :void)
+        end
+
+      else
+        get_room.empty = true
+
+        puts "The room is emptying"
+
+        get_root.move(:player, :station_beta)
+      end
+    SCRIPT
   end
+
   item(:sign, 'sign') do
     self.presence = "Sign"
+    self.desc = "Automatic Air-Lock"
+    self.fixed = true
   end
 end
+
+room(:armoury) do
+  self.short_desc = "armoury"
+  self.desc = <<-DESC
+    The SEA-BASE ARMOURY. The exit is SOUTH
+  DESC
+
+  self.exit_south = :tcorridor2
+
+  item(:spear_gun, 'speargun') do
+    self.presence = "Speargun (loaded)"
+    self.loaded = true
+
+    self.script_fire = <<-SCRIPT
+      if get_room.find(:octopus) && self.loaded
+        puts "SSHHHH! Spear hits in the eye!"
+        puts "And it gets really annoyed"
+
+        self.loaded = false
+
+        self.presence = "Empty speargun"
+        self.short_desc = "Empty speargun"
+
+        get_root.move(:ink, :murky_depths)
+      else
+        if self.loaded
+          puts "Not just yet Ed!"
+        else
+          puts "I can't do that Ed."
+        end
+
+        return false
+      end
+    SCRIPT
+  end
+end
+
 room(:at_long_table) do
   self.exit_west = :food_farm
   self.short_desc ="Long Table"
   self.script_enter = <<-SCRIPT
+    if get_root.find(:flippers).worn
+      puts "FLIP! FLOP! FLIP! FLOP! - You waddle over to the table - find"
+      puts "something - then waddle back...."
+
+      get_root.move(:large_key, :food_farm)
+
+      return false
+    else
       puts "WHEEEEEE!!!"
       puts "You slide majestically across the room on the seaweed."
       puts "Feet won't grip!"
@@ -131,31 +287,41 @@ room(:at_long_table) do
       puts ""
 
       return false
+    end
   SCRIPT
+
+  item(:large_key, 'key') do
+    self.presence = "Large key"
+    self.short_desc = "Large key"
+  end
 end
+
 room(:bottle_store) do
   self.short_desc = "bottle_store"
   self.desc = <<-DESC
     The Gas Bottle Store. The exit is south.
   DESC
-  
+
   self.exit_south = :fcorridor1
-  
+
   item(:air_bottle, 'bottle') do
     self.presence   = "Air bottle"
     self.short_desc = "Air bottle"
-    self.desc = "There's a hose fitted"
+    self.desc = "There's a HOSE fitted"
   end
 end
+
 room(:carriage) do
   self.desc = <<-DESC
     I'm in the Travel-Tube car. A metallic voice from the
     loudspeaker-"CLUNK-CLICK OR YOU'RE SURE TO BE SICK"
   DESC
+  
   self.short_desc = <<-DESC
     A metallic voice from the loudspeaker-"CLUNK-CLICK OR YOU'RE
     SURE TO BE SICK"
   DESC
+
   self.script_exit = <<-SCRIPT
     if get_room.open
       current_station = get_root.find(:tube_car).get_room
@@ -179,27 +345,37 @@ room(:carriage) do
       self.get_room.open = true
     SCRIPT
   end
+
   item(:smallslot, 'slot') do
     self.fixed = true
     self.short_desc = "small slot."
     self.presence = "small slot"
   end
 end
+
 room(:computer_room) do
   self.desc = <<-DESC
-    
+    I am in the SEABASE MAIN COMPUTER ROOM. Corridors lead NORTH, SOUTH, & WEST.
   DESC
-  
+
   self.exit_south = :tcorridor3
-  
+
   self.script_enter = <<-SCRIPT
     if get_root.find(:tv_camera).covered == true
       return true
     else
+
+      puts "Metallic voice:"
+      puts 'SECURITY ALERT! ANTI-PERSONAL GUNS...AIM...FIRE! AAAGGGHHH!!!'
+      puts ""
+      puts "You run quickly back to the corridor!"
+      puts "\n\n"
+
       return false
     end
   SCRIPT
 end
+
 room(:corridor1) do
   self.exit_north = :station_beta
   self.exit_east  = :corridor2
@@ -231,10 +407,11 @@ room(:corridor2) do
       In case of ELEVATOR breakdown contact MISS. ISLES on "199"
     DESC
     self.script_read = <<-SCRIPT
-      puts "In case of ELEVATOR breakdown contact MISS. ISLES on 199"
+      puts 'In case of ELEVATOR breakdown contact MISS. ISLES on "199"'
     SCRIPT
   end
 end
+
 room(:corridor3) do
   self.desc = <<-DESC
     This CORRIDOR still stretches EAST/WEST. I get the strangest feeling
@@ -251,26 +428,27 @@ room(:corridor4) do
   self.short_desc = "Corridor."
   self.desc = <<-DESC
     East / West curving corridor. There is a
-    dimly lit alcove to the south.
+    dimly lit ALCOVE to the SOUTH.
   DESC
-  
+
   self.exit_west  = :corridor3
   self.exit_east  = :corridor1
   self.exit_south = :lift1
-  
+
   scenery(:chute, 'chute') do
-    fixed = true
-    presence = "Large metal chute (sloping up)"
-    
+    self.fixed = true
+    self.presence = "Large metal chute (sloping up)"
+
     self.desc = <<-DESC
       Nasty smell of rubbish
     DESC
-    self.script_enter do
+    self.script_enter = <<-SCRIPT
       puts "You slide back down. It's too steep."
       return false
-    end
+    SCRIPT
   end
 end
+
 room(:deep_freeze) do
   self.short_desc = "deep_freeze"
   self.desc = <<-DESC
@@ -321,27 +499,43 @@ room(:deep_freeze) do
     end
   end
 end
+room(:dental_surgery) do
+  self.short_desc = "dental_surgery"
+  self.desc = <<-DESC
+    Spotless white tiles are all around in the DENTAL SURGERY. The exit is east.
+  DESC
+
+  self.exit_east = :living_quarters
+
+  item(:dental_pincers, 'pincers', 'dental') do
+    self.presence   = "Dental Pincers"
+    self.short_desc = "Dental Pincers"
+  end
+end
+
 room(:dinning_room) do
-  self.short_desc = "dining_room"
+  self.short_desc = "Dining room"
   self.desc = <<-DESC
     The DINNING ROOM AREA. Walkways lead NORTH EAST and WEST.
   DESC
-  
+
   self.exit_north = :fcorridor2
   self.exit_east  = :kitchen
   self.exit_west  = :laundry
-  
+
   item(:flippers, 'flippers', 'sure-grip') do
-    self.presence = "Pair of \"Sure Grip\" Flippers"
-    self.desc = <<-DESC
-    DESC
+    self.presence   = "Pair of \"Sure Grip\" Flippers"
+    self.short_desc = "Pair of \"Sure Grip\" Flippers"
+    self.worn       = false
+    self.wearable   = true
   end
-  
+
   item(:fork, 'fork') do
     self.presence ="Fork"
     self.desc = "One of it's PRONGS is missing."
   end
 end
+
 room(:diving_storeroom) do
   self.short_desc = "Diving Storeroom"
   self.desc = <<-DESC
@@ -358,11 +552,20 @@ room(:diving_storeroom) do
     item(:diving_suit, 'suit') do
       self.desc = "There's a HOSE fitted."
       self.presence = "Diving suit"
+      self.connected_to_air = false
       #TODO - when you wear suit it checks for air and says
       # "Not until you have some AIR matey!"
+      self.script_wear = <<-SCRIPT
+        if self.connected_to_air
+          puts "OK"
+        else
+          puts "not until you have some AIR matey!"
+        end
+      SCRIPT
     end
   end
 end
+
 room(:fcorridor1) do
   self.desc = <<-DESC
     This is the second lever corridor system going east & west. The lift
@@ -375,58 +578,59 @@ room(:fcorridor1) do
   self.exit_west  = :fcorridor4
 end
 room(:fcorridor2) do
-  self.short_desc = "fcorridor2"
+  self.short_desc = "Corridor"
   self.desc = <<-DESC
     As the CORRIDOR continues EAST/WEST, I begin to with I was still on the
-    SUB'. At least the gangwaus were straight!
-    There are also compartments to the north and south.
+    SUB'. At least the gangways were straight!
+    There are also compartments to the NORTH and SOUTH.
   DESC
-  
+
   self.exit_south = :dinning_room
   self.exit_north = :surgery
   self.exit_east  = :fcorridor3
   self.exit_west  = :fcorridor1
 end
+
 room(:fcorridor3) do
   self.desc = <<-DESC
     The corridor narrows here slightly at a junction between walkways.
-    Exits are to the east, west & south. There's an awful smell of 
+    Exits are to the east, west & south. There's an awful smell of
     rubbish coming from somewhere!
   DESC
   self.short_desc = "Corridor"
-  
+
   self.exit_east  = :fcorridor4
   self.exit_west  = :fcorridor2
   self.exit_south = :food_store
-  
+
   item(:switch, 'switch') do
-    self.presence = "switch"
+    self.presence = "Large Switch"
     self.desc = "Its marked LEFT and RIGHT"
     self.short_desc = "Switch"
-  
+
     self.script_push = <<-SCRIPT
       puts  self.children
       puts "It's jammed on RIGHT. Maybe if I had some thing to SHORT the SWITCH"
     SCRIPT
-    
+
     self.script_short = <<-SCRIPT
       if get_room.find(:fork)
         puts "CRACK!! ZAPP!!"
         get_root.move(:fork, :void)
         get_root.move(:melted_metal, :fcorridor3)
-        
+
         target = get_room.find(:conveyor_belt)
         target.presence = "Conveyor belt (moving LEFT)"
         target.going_right = false
       end
     SCRIPT
   end
-  
+
   scenery(:conveyor_belt, 'conveyor') do
     self.presence = "Conveyor belt (moving RIGHT)"
     self.desc = "It's quite big...maybe I should CLIMB on to it..."
     self.going_right = true
-    
+
     self.script_climb = <<-SCRIPT
       if self.going_right == true
         puts "WHOOPS..It's going the wrong way."
@@ -440,45 +644,52 @@ room(:fcorridor3) do
     SCRIPT
   end
 end
+
 room(:fcorridor4) do
+  self.short_desc = "Corridor"
   self.desc = <<-DESC
     The east/west curving corridor leads on with a very
     brightly lit Walk-way south.
   DESC
-  
+
   self.exit_east  = :fcorridor1
   self.exit_west  = :fcorridor3
   self.exit_south = :head_office
 end
+
 room(:food_farm) do
   self.exit_west  = :walkway
   self.exit_south = :station_charlie
   self.exit_east  = :at_long_table
+
   self.desc = <<-DESC
     I've entered the FOOD-FARM AREA. Yuk! The floor is almost completely
     covered with GREEN SLIMEY SEAWEED! Exits are SOUTH and WEST.
   DESC
   self.short_desc = "Food farm."
+
   item(:long_table, 'table', 'long') do
     self.desc = "It's to the EAST - at the other side of the room..."
     self.short_desc = "A table."
     self.presence   = "Long table."
   end
+
   scenery(:seaweed, 'seaweed') do
   end
 end
+
 room(:food_store) do
   self.short_desc = "food_store"
   self.desc = <<-DESC
     The seems to be some sort of FOOD-STORE. The way out is NORTH.
   DESC
-  
+
   self.exit_north = :fcorridor3
-  
+
   item(:wicker_cage, 'cage') do
     self.presence = "Wicker Cage"
     self.fixed = true
-    
+
     #TODO the delow doesn't work??? Even if there's no child
     self.script_examine = <<-SCRIPT
       if self.children.nil?
@@ -490,17 +701,17 @@ room(:food_store) do
         return false
       end
     SCRIPT
-    
+
     self.script_take = <<-SCRIPT
       puts "Thanks-but NO THANKS!"
       return false
     SCRIPT
-    
+
     item(:hen, 'hen') do
       self.presence = "Hen"
-      self.desc = "It is asleep"
+      self.desc = "It is asleep..."
       self.fixed = true
-      
+
       item(:egg, 'egg') do
         self.presence   = "Large brown egg"
         self.short_desc = "Large brown egg"
@@ -508,26 +719,38 @@ room(:food_store) do
     end
   end
 end
+
 room(:head_office) do
   self.short_desc = "head_office"
   self.desc = <<-DESC
     ****H E A D - O F F I C E****<br>
-    A brightly lit passage leads off NORTH
+    I've never seen an office like this one! The huge oval-shaped compartment
+    is full of noisy pulsating racks of equipment. Not a typewriter or filing
+    cabinet in sight! A brightly lit passage leads off NORTH.
   DESC
-  
+
   self.exit_north = :fcorridor4
-  
+
   item(:auto_clerk, 'auto-clerk') do
-    self.presence = "auto-clerk"
-    self.desc = ""
-    
+    self.fixed = true
+    self.presence = "Auto-clerk"
+
+    self.script_examine = <<-SCRIPT
+      puts "I see something..."
+
+      get_root.move(:officeslot, :head_office, false)
+
+      return false
+    SCRIPT
+
     item(:officeslot, 'slot') do
       self.fixed = true
-      self.short_desc = "small slot"
-      self.presence = "small slot"
+      self.presence = "Small slot"
+      self.short_desc = "Small slot"
     end
   end
 end
+
 room(:kitchen) do
   self.desc = <<-DESC
     I am in a well used KITCHEN. Exit is WEST.
@@ -593,29 +816,36 @@ room(:library) do
   self.desc = <<-DESC
     This is the LIBRARY. Exits lead WEST and SOUTH.
   DESC
-  
+
   self.exit_south = :shower_room
-  self.exit_west  
+  self.exit_west  = :music_room
+
+  self.script_enter = <<-SCRIPT
+    puts "MUSIC seems louder now\n" if get_root.find(:music_room).music_on
+
+    return true
+  SCRIPT
 
   item(:cookbook, "cookbook") do
     self.presence = "Cookbook"
     self.fixed    = true
     self.desc     = '"MAKING PANCAKES" by LEN SCOVER'
-    self.read     = false 
-    
+    self.read     = false
+
     self.script_examine = <<-SCRIPT
       self.desc
       self.read = true
     SCRIPT
   end
 end
+
 room(:lift1) do
   self.short_desc = "Lift no. 1"
   self.desc = <<-DESC
     Sea-base lift Number >1<.
     The exit is to the north.
   DESC
-  
+
   self.exit_north = :corridor4
   self.exit_up    = :lift1b
   self.exit_down  = :lift1c
@@ -624,7 +854,7 @@ room(:lift1) do
     puts "A light comes on<br>"
     return true
   SCRIPT
-  
+
   item(:lift1_buttons, 'button') do
     fixed = true
     self.presence = "Row of buttons"
@@ -632,17 +862,19 @@ room(:lift1) do
       puts "Which one... UP or DOWN"
     SCRIPT
   end
-  
+
   self.script_up  = <<-SCRIPT
+    #TODO This doesn't work!
     puts "Shhh doors close. Lift ascends."
     puts "Doors open."
   SCRIPT
-  
+
   self.script_down = <<-SCRIPT
     puts "Bottom floor!"
     return false
   SCRIPT
 end
+
 room(:lift1b) do
   self.short_desc = "Lift no. 1"
   self.desc = <<-DESC
@@ -679,7 +911,7 @@ room(:lift1d) do
   self.desc = <<-DESC
     Top floor lift
   DESC
-  
+
   self.accessible = false
 
   self.exit_down  = :lift1b
@@ -730,18 +962,23 @@ room(:living_quarters) do
     The Base takes on a more homely appearance as in the LIVING QUARTERS.
     Exits go NORTH, SOUTH, EAST and WEST
   DESC
-  
+
   self.exit_north = :restroom
   self.exit_south = :tcorridor1
-  
-  # Logic
-  
-  item(:writing_bureau, 'writing', 'bureau') do
+  self.exit_west  = :dental_surgery
+  #self.exit_east
+
+  item(:writing_bureau, 'bureau', 'writing') do
     self.presence = "Writing bureau"
     self.fixed    = true
     self.openable = true
+    self.script_open = <<-SCRIPT
+      puts "I see something..."
+      get_root.move(:fountain_pen, :living_quarters, false)
+    SCRIPT
   end
 end
+
 room(:missile_room) do
   self.exit_south = :station_echo
   self.desc = <<-DESC
@@ -768,34 +1005,147 @@ room(:missile_room) do
     self.presence = "Small keyboard"
   end
 end
+room(:murky_depths) do
+  self.short_desc = "Murky Depths"
+  self.desc = <<-DESC
+    I am swimming around in the MURKY DEPTHS of the OCEAN. Yellow streaks of
+    blurry light from the base reach out for a few hundred yards into the lonely
+    blackness. To the WEST the lightbeams seem to dance along the edge of some
+    huge long object resting on the sea-bed.
+  DESC
+
+  scenery(:open_sea_filled_hatch, 'hatch') do
+    self.presence = "Open sea-filled hatch"
+
+    self.script_enter = <<-SCRIPT
+      get_root.move(:player, :airlock)
+
+      return false
+    SCRIPT
+  end
+
+  scenery(:mini_sub, 'sub') do
+    self.presence = "Mini-sub"
+    self.script_enter = <<-SCRIPT
+      # get_root.move(:player, :submarine)
+      return false
+    SCRIPT
+  end
+
+  scenery(:octopus, 'octopus') do
+    self.presence = "Giant Octopus"
+    self.desc = "BIG but nothing to write home about...."
+  end
+end
+
+room(:music_room) do
+  self.short_desc = "music_room"
+  self.desc = <<-DESC
+    I've walked into the MUSIC ROOM. The exit is EAST
+  DESC
+
+  self.music_on  = false
+
+  self.exit_east = :library
+
+  self.script_enter = <<-SCRIPT
+    if self.music_on
+      puts "Oh what a din! Sounds like an old Rock & Roll song!-"
+      puts "WITH A BARREL OF LAUGHS,"
+      puts "AND WHAT THE SPIRITS ADVISE,"
+      puts "WE'RE DOING HAMMER & NAILS,"
+      puts "TO GET OUR BODIES TO RISE..."
+    end
+
+    return true
+  SCRIPT
+
+  item(:loudspeaker, 'loudspeaker') do
+    self.fixed = true
+    self.presence = "Loudspeaker"
+    self.desc = "It has a loose magnet"
+
+    item(:magnet, 'magnet') do
+      self.presence = "Magnet"
+      self.script_unscrew = <<-SCRIPT
+        puts "Could help you get to the bottom of a problem..."
+        get_root.move(:loudspeaker, :void)
+        get_root.move(:magnet, :music_room, false)
+      SCRIPT
+    end
+  end
+
+  item(:hifi_unit, 'hifi', 'unit') do
+    self.fixed = true
+    self.presence = "Hifi unit"
+  end
+end
+
+room(:power_distribution) do
+  self.short_desc = "power_distribution"
+  self.desc = <<-DESC
+    This is the POWER DISTRIBUTION ROOM. The exits are NORTH, SOUTH & EAST.
+  DESC
+
+  # Exits
+  self.exit_east  = :reactor
+  self.exit_south = :tcorridor4
+
+  item(:power_distribution_switch, 'switch') do
+    self.fixed = true
+    self.presence = "Switch"
+
+    self.script_push = <<-SCRIPT
+      get_root.find(:music_room).music_on = true
+      puts "I can hear the faint sound of MUSIC"
+    SCRIPT
+  end
+end
+
+room(:reactor) do
+  self.short_desc = "reactor"
+  self.desc = <<-DESC
+    I'm in the REACTOR ROOM. The exit is WEST.
+  DESC
+
+  self.exit_west = :power_distribution
+
+  item(:hammer, 'hammer') do
+    self.presence = "Hammer"
+    self.desc = "See what you can MAKE"
+  end
+end
+
 room(:refuse_compartment) do
   self.desc = <<-DESC
     "I am in the smelly REFUSE COMPARTMENT."
   DESC
-  
+
   # Exits - none
-  
+
   item(:bowl, 'bowl', 'mixing') do
     self.presence   = "Old mixing bowl"
     self.short_desc = "Old mixing bowl"
   end
-  
+
   item(:foil, 'foil')  do
     self.presence   = 'Crumpled up aluminium cooking foil'
     self.short_desc = "Foil"
     self.desc = "On reflection...It's..well..CRUMPLED!"
     self.smooth = false
-    
+
     self.script_iron = <<-SCRIPT
       puts "You iron the foil"
+      self.presence   = 'Smooth sheet of Aluminium cooking foil'
       self.desc = "Smooth sheet of Aluminium cooking foil."
+      self.short_desc = "Smooth sheet of Aluminium cooking foil."
       self.smooth = true
     SCRIPT
   end
-    
+
   scenery(:chute, 'chute') do
     self.presence = "Large metal chute (Sloping down)"
-    
+
     self.script_enter = <<-SCRIPT
       puts "Wheeeeee!!!"
       puts "OUCH! I've landed somewhere!"
@@ -803,11 +1153,12 @@ room(:refuse_compartment) do
       return false
     SCRIPT
   end
-  
+
   scenery(:conveyor_belt2, 'conveyor') do
     self.presence = "Conveyor belt"
   end
 end
+
 room(:restroom) do
   self.short_desc = "restroom"
   self.desc = <<-DESC
@@ -835,22 +1186,29 @@ room(:shower_room) do
   self.desc = <<-DESC
     I am in the SHOWER-ROOM. The exits are NORTH and SOUTH.
   DESC
-  
+
   self.exit_north = :library
   self.exit_south = :restroom
-  
+
+  self.script_enter = <<-SCRIPT
+    puts "I can hear the faint sound of music." if get_root.find(:music_room).music_on
+
+    return true
+  SCRIPT
+
   scenery(:tap, 'tap') do
     self.presence = 'Tap'
     self.short_desc = 'Tap'
   end
 end
+
 room(:station_alpha) do
   self.destination = :station_beta
   self.desc = <<-DESC
-    I am on a platform at STATION "ALPHA"
+    I am on a platform at STATION "ALPHA" still further up the track. THe curiosly mixed coloured lighting seems to give each station a character of its own. THere appears to be no other obvious exits from here.
   DESC
   self.short_desc = "Station Alpha"
-  
+
   item(:torch, 'torch') do
     self.desc = <<-DESC
       Well every adventure's GOT to have one of these hasn't it?
@@ -861,6 +1219,7 @@ room(:station_alpha) do
     #TODO self.script to do the desc on pick up like the original game?
   end
 end
+
 room(:station_beta) do
   self.exit_south = :corridor1
   self.destination = :station_charlie
@@ -868,14 +1227,27 @@ room(:station_beta) do
     I am on a platform at STATION "BETA". A connecting walk-tube
     leads off SOUTH.
   DESC
-  item(:hatch, 'hatch') do
+  scenery(:hatch, 'hatch') do
+    self.presence = "Closed hatch"
+    #TODO hatch doesn't work as expected. Needs open and closed
     self.openable = true
+
     self.script_enter = <<-SCRIPT
+      return false if !self.open
+
+      puts ""
       puts "Bang! Hatch slams shut!"
       get_root.move(:player, :airlock)
-      SCRIPT
+
+      return false
+    SCRIPT
+
+    self.script_open = <<-SCRIPT
+      self.presence = "Open hatch"
+    SCRIPT
   end
 end
+
 room(:station_charlie) do
   self.exit_north = :food_farm
   self.destination = :station_delta
@@ -940,7 +1312,7 @@ end
 room(:station_foxtrot) do
   self.short_desc = "Station Foxtrot"
   self.desc = <<-DESC
-    I am on a platform at STATION "FOXTROT"
+    I am on a platform at STATION "FOXTROT". The tube-car is so fast it's hard to say just how far I have travvelled...
   DESC
 
   self.destination = :station_alpha
@@ -950,6 +1322,7 @@ room(:station_foxtrot) do
     self.presence = "Screwdriver"
   end
 end
+
 room(:surgery) do
   self.short_desc = "surgery"
   self.desc = <<-DESC
@@ -968,33 +1341,34 @@ room(:surgery) do
   end
 end
 room(:tcorridor1) do
-  self.short_desc = "tcorridor1"
+  self.short_desc = "Corridor"
   self.desc = <<-DESC
     The TWISTING WALKWAY meets a junctino of TUBES leading NORTH, SOUTH, EAST
     and WEST.
   DESC
-  
+
   self.exit_north = :living_quarters
   self.exit_east  = :tcorridor2
-  
-  # Logic
-  
+  self.exit_west  = :tcorridor4
+
   item(:microphone, 'microphone') do
     self.presence = "Microphone"
     self.fixed = true
   end
 end
+
 room(:tcorridor2) do
   self.desc = <<-DESC
     I've reached the THIRD LEVEL in a TWISTING TUBULAR WALKWAY leading
     EAST/WEST. A small compartment is NORTH. SOUTH leads into the LIFT.
   DESC
-  
+
   self.exit_south = :lift1d
   self.exit_west  = :tcorridor1
-  #NEW to do N E W
-  
-  self.scenery(:glass_case, 'glass') do
+  self.exit_east  = :tcorridor3
+  self.exit_north = :armoury
+
+  self.scenery(:glass_case, 'case') do
     self.presence = "Glass case"
     self.desc = <<-DESC
       IN CASE OF DESPERATE FRUSTRATION<br>
@@ -1003,16 +1377,17 @@ room(:tcorridor2) do
     # TODO: Break glass
   end
 end
+
 room(:tcorridor3) do
   self.desc = <<-DESC
-    The WALKWAY seems to get steeper here as it continues EAST & WEST. There's 
+    The WALKWAY seems to get steeper here as it continues EAST & WEST. There's
     a HUGE PASSAGE to the NORTH.
   DESC
-  
-  self.exit_west = :tcorridor2
+
+  self.exit_west  = :tcorridor2
   self.exit_north = :computer_room
-  #self.exit_east = :tcorridor4
-  
+  self.exit_east  = :tcorridor4
+
   item(:tv_camera, 'camera', 'tv') do
     self.presence = "TV Camera"
     self.desc = <<-DESC
@@ -1022,14 +1397,25 @@ room(:tcorridor3) do
 
     self.covered = false
   end
-  
-  # self.script_north = <<-SCRIPT
 end
+
+room(:tcorridor4) do
+  self.desc = <<-DESC
+    The WALKWAY twists on EAST and WEST and meets up with another gangway NORTH.
+    There is a gentle humming sound.
+  DESC
+
+  self.exit_north = :power_distribution
+  self.exit_east  = :tcorridor1
+  self.exit_west  = :tcorridor3
+end
+
 # The void room is a place to put all the nodes which have no natural place
-# in the game world. 
+# in the game world.
 room(:void) do
   self.desc = "You are in the void - how did you get here?"
   self.short_desc = "The Void"
+  
   item(:mover, 'mover', 'metallic') do
     self.presence = "The mover is here."
   end
@@ -1041,7 +1427,7 @@ room(:void) do
       return false
     SCRIPT
   end
-  
+
   scenery(:pockets, 'pocket') do
     self.script_examine = <<-SCRIPT
       if self.children.nil?
@@ -1057,65 +1443,141 @@ room(:void) do
     SCRIPT
     item(:plastic_card, 'card', 'plastic') do
       self.usage = 5
+
       self.desc = <<-DESC
         TRAVEL PERMIT issues to and for use of secret agent -
         SIGNED -"MAJOR I.RON.FOIL"
       DESC
+
       self.short_desc = "Plastic card"
       self.presence = "Plastic card"
-      
+
       self.script_use = <<-SCRIPT
         if args[0].nil?
           puts "Insert it where?"
           return false
-        elsif args[0].tag != :smallslot
-          puts "You can't put that there."
+        elsif args[0].tag == :smallslot
+          if get_room.open
+            puts get_room.short_desc
+            return false
+          elsif usage == 0
+            puts "A metallic voice - SORRY - YOU HAVE USED"
+            puts " UP YOUR TRAVEL PERMIT - PLEASE REPORT TO"
+            puts "HEAD OFFICE & SIGN FOR NEW CARD - THANKYOU"
+            return false
+          else
+            self.usage -= 1
 
-          return false
-        elsif get_room.open
-          puts get_room.short_desc
-          return false
-        elsif usage == 0
-          puts "A metallic voice - SORRY - YOU HAVE USED"
-          puts " UP YOUR TRAVEL PERMIT - PLEASE REPORT TO"
-          puts "HEAD OFFICE & SIGN FOR NEW CARD - THANKYOU"
+            puts "SHHHHH...sliding doors close."
+            puts "The car hurtles along the tunnel at high speed"
+            puts " and then jolts to a halt"
+            puts "POING! Card pops out."
+
+            dest = get_root.find(:tube_car).get_room.destination
+            get_root.move(:tube_car, dest, false)
+
+            return false
+          end
+        elsif args[0].tag == :officeslot
+          get_root.move(:plastic_card, :void)
+
+          puts "a metal ARM drops down revealing a FORM."
+          puts "Metallic voice- 'THANK YOU SIR - SIGN FOR YOUR NEW CARD'"
+
+          get_root.move(:form, :head_office)
+
           return false
         else
-          self.usage -= 1
-          
-          puts "SHHHHH...sliding doors close."
-          puts "The car hurtles along the tunnel at high speed"
-          puts " and then jolts to a halt"
-          puts "POING! Card pops out."
-
-          dest = get_root.find(:tube_car).get_room.destination
-          get_root.move(:tube_car, dest, false)
+          puts "You can't put that there."
 
           return false
         end
       SCRIPT
     end
   end
-  
+
+  item(:form, 'form') do
+    self.presence = "Paper form"
+    self.desc = ""
+
+    # TODO: How do you know about I.ron Form's signature
+    self.script_sign = <<-SCRIPT
+      if !get_room.find(:fountain_pen)
+        puts "With what? My bare hands?"
+
+        return false
+      end
+
+      if !get_room.find(:fountain_pen).filled
+        puts "It's EMPTY Ed!"
+      else
+        puts "You forge I.Ron Foil's signature!"
+
+        puts "a NEW CARD pops out of the machine and it switches off..."
+
+        get_root.move(:form, :void)
+        get_root.move(:plastic_card, :head_office)
+        get_root.find(:plastic_card).usage = 6
+      end
+    SCRIPT
+  end
+
   scenery(:melted_metal, 'metal') do
     self.presence = "melted metal fork"
   end
-  
+
   item(:flour, "flour", "bag of") do
     self.presence   = "Bag of Flour"
     self.short_desc = "Bag of Flour"
   end
-  
+
   item(:bowl_of_mixture, 'bowl', 'mixture') do
     self.presence   = "Bowl of pancake mixture"
     self.short_desc = "Bowl of pancake mixture"
   end
-  
+
   item(:pancake, 'pancake') do
     self.presence   = "Pancake"
     self.short_desc = "Pancake"
+
+    self.script_throw = <<-SCRIPT
+      puts "Wheee..."
+      puts "Splat Goodshot!"
+      get_root.move(:pancake, :void)
+      get_root.find(:tv_camera).covered = true
+      get_root.find(:tv_camera).presence = "TV Camera (Pancake covering lens)"
+    SCRIPT
+  end
+
+  item(:fountain_pen, 'pen', 'fountain') do
+    self.presence = "Fountain pen"
+    self.desc = "It's Empty Ed!"
+    self.filled = false
+
+    self.script_fill = <<-SCRIPT
+      if get_room.find(:ink)
+        puts "OK"
+
+        self.filled = true
+        self.presence = "Fountain pen (full of ink)"
+        self.short_desc = "Fountain pen (full of ink)"
+        self.desc = nil
+        get_root.move(self, :murky_depths)
+      end
+    SCRIPT
+  end
+
+  item(:connected_suit, 'suit') do
+    self.presence   = "Diving suit (with Air Bottle Attached)"
+    self.short_desc = "Diving suit (with Air Bottle Attached)"
+  end
+
+  item(:ink, 'ink') do
+    self.presence = "Clouds of ink"
+    self.fixed = true
   end
 end
+
 room(:walkway) do
   self.exit_east = :food_farm
   self.desc = <<-DESC

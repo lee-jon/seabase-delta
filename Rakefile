@@ -16,16 +16,16 @@ task :build do
   puts "Creating root node"
   game_file << "Node.root do" + "\n"
   game_file << File.read('seabase/lib/root.rb') + "\n"
-  
+
   puts "  Adding rooms"
   rooms = FileList['seabase/rooms/*.rb']
   rooms.each do |r|
     puts "    adding #{(r.gsub('.rb', ''))}"
     game_file << File.read(r) + "\n"
   end
-  
+
   puts "  Rooms Finished"
-  puts "Closing root node"
+  puts "Closing root node @ #{Time.now}"
   game_file << "end"
   game_file.close
 end
@@ -36,7 +36,7 @@ task :room, :arg1, :arg2 do |t, args|
   file_name = "seabase/rooms/" + room_name + ".rb"
 
   puts "Creating a new room for #{room_name}"
-  
+
   room = File.new(file_name, "w+")
   content = File.read('config/blank_room.rb')
   content.gsub!('ROOMNAME', room_name)

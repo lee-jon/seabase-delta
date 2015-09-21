@@ -3,7 +3,7 @@ room(:lift1d) do
   self.desc = <<-DESC
     Top floor lift
   DESC
-  
+
   self.accessible = false
 
   self.exit_down  = :lift1b

@@ -17,7 +17,7 @@ room(:corridor2) do
       In case of ELEVATOR breakdown contact MISS. ISLES on "199"
     DESC
     self.script_read = <<-SCRIPT
-      puts "In case of ELEVATOR breakdown contact MISS. ISLES on 199"
+      puts 'In case of ELEVATOR breakdown contact MISS. ISLES on "199"'
     SCRIPT
   end
 end

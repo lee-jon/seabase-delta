@@ -3,10 +3,12 @@ room(:carriage) do
     I'm in the Travel-Tube car. A metallic voice from the
     loudspeaker-"CLUNK-CLICK OR YOU'RE SURE TO BE SICK"
   DESC
+  
   self.short_desc = <<-DESC
     A metallic voice from the loudspeaker-"CLUNK-CLICK OR YOU'RE
     SURE TO BE SICK"
   DESC
+
   self.script_exit = <<-SCRIPT
     if get_room.open
       current_station = get_root.find(:tube_car).get_room
@@ -30,6 +32,7 @@ room(:carriage) do
       self.get_room.open = true
     SCRIPT
   end
+
   item(:smallslot, 'slot') do
     self.fixed = true
     self.short_desc = "small slot."

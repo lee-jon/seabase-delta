@@ -22,7 +22,7 @@ You will need the current version of the IF engine and this game, the current bu
     mkdir if/games
     cd seabase-delta
     rake build
-    ln -s bin/seabase-delta.game.rb ../games/seabase-delta.rb
+    ln -s bin/seabase-delta.game.rb ../if/games/seabase-delta.rb
 
 Then play the game with
 

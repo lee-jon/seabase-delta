@@ -4,7 +4,7 @@ room(:lift1) do
     Sea-base lift Number >1<.
     The exit is to the north.
   DESC
-  
+
   self.exit_north = :corridor4
   self.exit_up    = :lift1b
   self.exit_down  = :lift1c
@@ -13,7 +13,7 @@ room(:lift1) do
     puts "A light comes on<br>"
     return true
   SCRIPT
-  
+
   item(:lift1_buttons, 'button') do
     fixed = true
     self.presence = "Row of buttons"
@@ -21,12 +21,13 @@ room(:lift1) do
       puts "Which one... UP or DOWN"
     SCRIPT
   end
-  
+
   self.script_up  = <<-SCRIPT
+    #TODO This doesn't work!
     puts "Shhh doors close. Lift ascends."
     puts "Doors open."
   SCRIPT
-  
+
   self.script_down = <<-SCRIPT
     puts "Bottom floor!"
     return false
