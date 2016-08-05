@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-08-05 11:19:56 +0100
+# Compiled 2016-08-05 11:27:41 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -1342,6 +1342,20 @@ room(:restroom) do
   end
 end
 
+room(:security_control) do
+  self.short_desc = "security_control"
+  self.desc = <<-DESC
+    This is SEABASE SECURITY CONTROL. The way out is NORTH.
+  DESC
+
+  self.exit_north = :shadowy_tunnel
+
+  scenery(:knob, 'knob') do
+    self.presence = "Knob"
+    self.desc = "Mini-Sub Release"
+  end
+end
+
 room(:shadowy_tunnel) do
   self.short_desc = "shadowy_tunnel"
   self.desc = <<-DESC
@@ -1355,6 +1369,14 @@ room(:shadowy_tunnel) do
     self.desc = "Shut tight and HEAVY man"
 
     self.unlocked = false
+
+    self.script_enter = <<-SCRIPT
+      return false unless self.unlocked
+
+      get_root.move(:player, :security_control)
+
+      return false
+    SCRIPT
   end
 end
 
@@ -1536,7 +1558,6 @@ room(:tcorridor1) do
       doors = get_root.find(:sliding_doors)
       doors.unlocked = true
       doors.presence = "Huge OPEN metal sliding doors"
-      doors.desc = nil
     end
 
     return true

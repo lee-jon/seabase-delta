@@ -11,5 +11,13 @@ room(:shadowy_tunnel) do
     self.desc = "Shut tight and HEAVY man"
 
     self.unlocked = false
+
+    self.script_enter = <<-SCRIPT
+      return false unless self.unlocked
+
+      get_root.move(:player, :security_control)
+
+      return false
+    SCRIPT
   end
 end

@@ -18,6 +18,7 @@ room(:tcorridor1) do
       doors = get_root.find(:sliding_doors)
       doors.unlocked = true
       doors.presence = "Huge OPEN metal sliding doors"
+      doors.desc = nil
     end
 
     return true

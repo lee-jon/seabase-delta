@@ -270,9 +270,13 @@ west
 drop player
 south
 
+enter door
+
 S (the metal sliding doors are now open),
 GO DOOR (Seabase security control), EXAMINE KNOB (mini-sub release),
-PULL KNOB, N, N, E, E, N, N (launch control area),
+PULL KNOB,
+
+N, N, E, E, N, N (launch control area),
 OPEN ENVELOPE (to gain certificate), READ CERTIFICATE (certificate of insurance),
 S, S, W, S (lift), DOWN, N, E, N (doctor’s surgery),
 EXAMINE THERMOMETER (104 degrees - note this number), S, E, E, S (head office),
