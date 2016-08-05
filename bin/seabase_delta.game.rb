@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-08-05 11:27:41 +0100
+# Compiled 2016-08-05 12:06:20 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -1152,10 +1152,14 @@ room(:murky_depths) do
     SCRIPT
   end
 
-  scenery(:mini_sub, 'sub') do
+  item(:mini_sub, 'sub') do
     self.presence = "Mini-sub"
+    self.desc = "A minature submarine"
+
+    self.released = false
+
     self.script_enter = <<-SCRIPT
-      # get_root.move(:player, :submarine)
+      get_root.move(:player, :submarine)
       return false
     SCRIPT
   end
@@ -1353,6 +1357,11 @@ room(:security_control) do
   scenery(:knob, 'knob') do
     self.presence = "Knob"
     self.desc = "Mini-Sub Release"
+
+    self.script_pull = <<-SCRIPT
+      get_root.find(:submarine).released = true
+      puts "OK"
+    SCRIPT
   end
 end
 
@@ -1521,6 +1530,35 @@ room(:station_foxtrot) do
   end
 end
 
+room(:submarine) do
+  self.short_desc = "submarine"
+  self.desc = <<-DESC
+    I've clambered into the MINI-SUB.
+  DESC
+
+  self.released = false
+
+  self.script_exit do
+    get_root.move(:player, :murky_depths)
+  end
+
+  scenery(:small_lever, 'lever') do
+    self.presence = "Small lever"
+
+    self.script_pull = <<-SCRIPT
+
+
+      puts "HUMM...The engines start.."
+      if parent.released
+        puts "NO. I just can't be so cowardly. I have to stop that missile..."
+      else
+        puts 'Metalic-voice-"NO SECURITY RELEASE.'
+        puts 'MINI-SUB LAUNCH ABORTED!"'
+      end
+    SCRIPT
+  end
+end
+
 room(:surgery) do
   self.short_desc = "surgery"
   self.desc = <<-DESC
@@ -1558,6 +1596,7 @@ room(:tcorridor1) do
       doors = get_root.find(:sliding_doors)
       doors.unlocked = true
       doors.presence = "Huge OPEN metal sliding doors"
+      doors.desc = nil
     end
 
     return true

@@ -9,5 +9,10 @@ room(:security_control) do
   scenery(:knob, 'knob') do
     self.presence = "Knob"
     self.desc = "Mini-Sub Release"
+
+    self.script_pull = <<-SCRIPT
+      get_root.find(:submarine).released = true
+      puts "OK"
+    SCRIPT
   end
 end

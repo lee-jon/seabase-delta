@@ -17,10 +17,14 @@ room(:murky_depths) do
     SCRIPT
   end
 
-  scenery(:mini_sub, 'sub') do
+  item(:mini_sub, 'sub') do
     self.presence = "Mini-sub"
+    self.desc = "A minature submarine"
+
+    self.released = false
+
     self.script_enter = <<-SCRIPT
-      # get_root.move(:player, :submarine)
+      get_root.move(:player, :submarine)
       return false
     SCRIPT
   end
