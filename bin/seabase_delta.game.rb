@@ -10,12 +10,11 @@
 # In Subsunk, the journalist Ed Lines, stranded aboard the wrecked submarine
 # Sea Lion, successfully sent a distress signal to headquarters and now awaits
 # rescue. But the message has been intercepted by enemy agents, who arrange for
-# Sea Lion to be towed into Seabase Delta, where she will not be found. Ed 
-# Lines emerges from the submarine to find the Seabase mysteriously deserted; 
+# Sea Lion to be towed into Seabase Delta, where she will not be found. Ed
+# Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-
-# Compiled 2015-09-21 20:23:01 +0100
+# Compiled 2016-08-05 11:19:56 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -40,6 +39,12 @@ class Player < Node
     item = get_room.find(words)
     return if item.nil?
     item.script('unscrew')
+  end
+
+  def do_tie(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('tie')
   end
 
   def do_blow(*words)
@@ -175,6 +180,15 @@ class Player < Node
       else
         puts "Not sure what you mean" #TODO: get actual text here
       end
+    end
+  end
+
+  def do_shout(*words)
+    if get_room.find(:microphone)
+      puts "ZZZZZZZAANG!..The sound of metal sliding over metal and a DAZZLING BEAM of LIGHT from the SOUTH..\n"
+      puts "ZZAAAANG!...THUD! Something slams shut. The BEAM of LIGHT disappears"
+    else
+      puts "OK. Nothing happened"
     end
   end
 end
@@ -353,12 +367,47 @@ room(:carriage) do
   end
 end
 
+room(:computer_memory_banks) do
+  self.short_desc = "Computer memory banks"
+  self.desc = <<-DESC
+    This is a small compartment containing the COMPUTER MEMORY BANKS. Exit is EAST.
+  DESC
+
+  self.exit_east = :computer_room
+
+  item(:cassette, 'cassette') do
+    self.presence   = "Cassette"
+    self.short_desc = "Cassette"
+    self.desc       = "HEAVY METAL MUSIC"
+
+    self.script_use = <<-SCRIPT
+      if get_room.find(:tape_player)
+        get_root.move(:tape_player, :computer_memory_banks)
+        get_root.move(:cassette, :void)
+
+        item = get_root.find(:tape_player)
+
+        item.playing = true
+        item.presence << " (Playing HEAVY METAL music)"
+        item.short_desc = item.presence
+        item.desc = nil
+        
+        return false
+      else
+        return true
+      end
+    SCRIPT
+  end
+end
+
 room(:computer_room) do
   self.desc = <<-DESC
     I am in the SEABASE MAIN COMPUTER ROOM. Corridors lead NORTH, SOUTH, & WEST.
   DESC
 
   self.exit_south = :tcorridor3
+  #self.exit_north = 
+  self.exit_west  = :computer_memory_banks
 
   self.script_enter = <<-SCRIPT
     if get_root.find(:tv_camera).covered == true
@@ -374,6 +423,11 @@ room(:computer_room) do
       return false
     end
   SCRIPT
+
+  scenery(:computer, 'computer') do
+    self.presence = "Computer"
+    self.desc = "It's an ANSTRATARI SPECODORE"
+  end
 end
 
 room(:corridor1) do
@@ -795,22 +849,57 @@ room(:laundry) do
     I have wantered into the LAUNDRY AREA. There is an ICY COLD Tunnel WEST
     & Exit EAST.
   DESC
-  
+
   self.exit_west = :deep_freeze
   self.exit_east = :dinning_room
-  
+
   item(:steam_iron, 'iron') do
     self.presence = "Steam-Iron"
     self.desc = "Its ON and HOT!"
     self.short_desc = "Iron"
   end
-  
+
   item(:washing_line, 'line') do
     self.presence = "Washing line"
     self.desc = "It's LONG....but not that STRONG.."
     self.short_desc = "Washing line"
+    self.with_magnet = false
+    self.with_attachment = false
+    self.thrown = false
+
+    self.script_throw = <<-SCRIPT
+      return if !self.with_magnet
+      return if !get_room.find(:deep_liftshaft)
+      return if self.thrown
+
+      puts "CLINK!....Magnet picks up something.."
+
+      self.presence = "Wash-line+Magnet(Hanging down liftshaft)"
+      self.with_attachment = true
+      self.fixed = true
+
+      get_root.move(self, :lift2)
+    SCRIPT
+
+    self.script_pull = <<-SCRIPT
+      if self.with_attachment
+        puts "OK"
+        get_root.move(:small_metal_disc, :lift2, false)
+
+        self.with_attachment = false
+        self.thrown = true
+        self.fixed = false
+        self.presence = self.short_desc
+
+        return false
+      else
+        puts "NOPE"
+        return false
+      end
+    SCRIPT
   end
 end
+
 room(:library) do
   self.short_desc = "library"
   self.desc = <<-DESC
@@ -942,21 +1031,60 @@ room(:lift2) do
   self.desc = <<-DESC
     Sea-Base Lift Number >2<. The EXIT is to the NORTH.
   DESC
-  
+
   self.exit_north = :corridor2
 
-  item(:floor_panel, 'panel') do
-    fixed = true
-    self.desc = "It can be OPENED but It's LOCKED!"
+  scenery(:floor_panel, 'panel') do
+    self.desc     = "It can be OPENED but It's LOCKED!"
     self.presence = "Floor panel"
-    #TODO: This is openable but doesn't have the script
+    self.openable = true
+
+    self.script_open = <<-SCRIPT
+      if get_room.find(:large_key)
+        puts "I see something!!"
+
+        self.presence = "Open Floor panel"
+        self.openable = false
+
+        get_root.move(:deep_liftshaft, :lift2)
+
+        return false
+      else
+        puts "it can be OPENED but it's LOCKED"
+
+        return false
+      end
+    SCRIPT
+
+    scenery(:deep_liftshaft, 'shaft') do
+      self.presence = 'Deep liftshaft'
+      self.desc = "It's a long way down. There might be something down there but I can't see that far!"
+
+      item(:small_metal_disc, 'disc') do
+        self.presence   = "Small metal disc"
+        self.short_desc = "Small metal disc"
+        self.desc       = "One play"
+
+        self.script_use = <<-SCRIPT
+          if get_room.find(:games_machine)
+            get_room.find(:games_machine).playing = true
+            
+            puts "It's one of those PLATFORM GAMES. A clown is jumping up and down on a Circus SEESAW...."
+          end
+        SCRIPT
+      end
+    end
   end
 
-  item(:lift2_buttons, 'buttons') do
-    fixed = true
-    self.presence = "Row of buttons"    
+  scenery(:lift2_buttons, 'buttons') do
+    self.presence = "Row of buttons"
+
+    self.script_push = <<-SCRIPT
+      puts "OK. Nothing Happened."
+    SCRIPT
   end
 end
+
 room(:living_quarters) do
   self.desc = <<-DESC
     The Base takes on a more homely appearance as in the LIVING QUARTERS.
@@ -1072,6 +1200,24 @@ room(:music_room) do
         get_root.move(:loudspeaker, :void)
         get_root.move(:magnet, :music_room, false)
       SCRIPT
+
+      self.script_tie = <<-SCRIPT
+        line = get_root.find(:washing_line)
+
+        if get_room.find(:washing_line)
+          get_root.move(:magnet, :void)
+          get_root.move(:washing_line, :lift2)
+
+          line.presence   << " (with magnet attached)"
+          line.short_desc << " (with magnet attached)"
+          line.with_magnet = true
+
+          puts "OK"
+        else
+          puts "I don't know how to do that"
+          return true
+        end
+      SCRIPT
     end
   end
 
@@ -1162,26 +1308,56 @@ end
 room(:restroom) do
   self.short_desc = "restroom"
   self.desc = <<-DESC
-    I've entered a cosy looking RESTROOM. 
-    There's a damp tunnel to the NORTH and a 
+    I've entered a cosy looking RESTROOM.
+    There's a damp tunnel to the NORTH and a
     Walk-tube to the SOUTH.
   DESC
-  
+
   self.exit_north = :shower_room
   self.exit_south = :living_quarters
-  
-  item(:games_machine, 'video') do
+
+  item(:games_machine, 'machine') do
     self.presence = "Video games machine"
     self.desc     = "Insert DISC for PLAY"
     self.fixed    = true
+    self.playing  = false
   end
-  
+
   item(:joystick, 'joystick') do
     self.presence = 'Joystick'
     self.desc     = 'Try PUSHING & PULLING it...'
     self.fixed    = true
+
+    self.script_push = <<-SCRIPT
+      if get_root.find(:games_machine).playing
+        puts "Clown flips up into the air! This is fun! But back to the quest..."
+      end
+    SCRIPT
+
+    self.script_push = <<-SCRIPT
+      if get_root.find(:games_machine).playing
+        puts "Clown throws a black ball.."
+      end
+    SCRIPT
   end
 end
+
+room(:shadowy_tunnel) do
+  self.short_desc = "shadowy_tunnel"
+  self.desc = <<-DESC
+    I'm at the end of a DARK SHADOWY TUNNEL. The way back is NORTH.
+  DESC
+
+  self.exit_north = :tcorridor1
+
+  scenery(:sliding_doors, 'doors') do
+    self.presence = "Huge metal sliding doors"
+    self.desc = "Shut tight and HEAVY man"
+
+    self.unlocked = false
+  end
+end
+
 room(:shower_room) do
   self.desc = <<-DESC
     I am in the SHOWER-ROOM. The exits are NORTH and SOUTH.
@@ -1343,17 +1519,32 @@ end
 room(:tcorridor1) do
   self.short_desc = "Corridor"
   self.desc = <<-DESC
-    The TWISTING WALKWAY meets a junctino of TUBES leading NORTH, SOUTH, EAST
+    The TWISTING WALKWAY meets a junction of TUBES leading NORTH, SOUTH, EAST
     and WEST.
   DESC
 
   self.exit_north = :living_quarters
+  self.exit_south = :shadowy_tunnel
   self.exit_east  = :tcorridor2
   self.exit_west  = :tcorridor4
 
-  item(:microphone, 'microphone') do
+  self.script_enter = <<-SCRIPT
+    if get_root.find(:tape_player).playing && get_room.find(:microphone).unplayed
+      puts "ZZZZZZZAANG!..The sound of metal sliding over metal and a DAZZLING BEAM of LIGHT from the SOUTH..\n\n"
+
+      get_room.find(:microphone).unplayed = false
+      doors = get_root.find(:sliding_doors)
+      doors.unlocked = true
+      doors.presence = "Huge OPEN metal sliding doors"
+      doors.desc = nil
+    end
+
+    return true
+  SCRIPT
+
+  scenery(:microphone, 'microphone') do
     self.presence = "Microphone"
-    self.fixed = true
+    self.unplayed = true
   end
 end
 
@@ -1415,7 +1606,7 @@ end
 room(:void) do
   self.desc = "You are in the void - how did you get here?"
   self.short_desc = "The Void"
-  
+
   item(:mover, 'mover', 'metallic') do
     self.presence = "The mover is here."
   end
@@ -1570,6 +1761,7 @@ room(:void) do
   item(:connected_suit, 'suit') do
     self.presence   = "Diving suit (with Air Bottle Attached)"
     self.short_desc = "Diving suit (with Air Bottle Attached)"
+    self.fixed = true
   end
 
   item(:ink, 'ink') do
@@ -1638,6 +1830,9 @@ room(:electronic_workshop) do
     self.desc = <<-DESC
       Mitsu-tachi recorder - Insert cassette
     DESC
+
+    self.playing = false
   end
 end
+
 end

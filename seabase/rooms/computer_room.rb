@@ -4,6 +4,8 @@ room(:computer_room) do
   DESC
 
   self.exit_south = :tcorridor3
+  #self.exit_north = 
+  self.exit_west  = :computer_memory_banks
 
   self.script_enter = <<-SCRIPT
     if get_root.find(:tv_camera).covered == true
@@ -19,4 +21,9 @@ room(:computer_room) do
       return false
     end
   SCRIPT
+
+  scenery(:computer, 'computer') do
+    self.presence = "Computer"
+    self.desc = "It's an ANSTRATARI SPECODORE"
+  end
 end

@@ -9,5 +9,7 @@ room(:electronic_workshop) do
     self.desc = <<-DESC
       Mitsu-tachi recorder - Insert cassette
     DESC
+
+    self.playing = false
   end
 end

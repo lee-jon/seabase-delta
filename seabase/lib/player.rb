@@ -23,6 +23,12 @@ class Player < Node
     item.script('unscrew')
   end
 
+  def do_tie(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('tie')
+  end
+
   def do_blow(*words)
     item = get_room.find(words)
     return if item.nil?
@@ -156,6 +162,15 @@ class Player < Node
       else
         puts "Not sure what you mean" #TODO: get actual text here
       end
+    end
+  end
+
+  def do_shout(*words)
+    if get_room.find(:microphone)
+      puts "ZZZZZZZAANG!..The sound of metal sliding over metal and a DAZZLING BEAM of LIGHT from the SOUTH..\n"
+      puts "ZZAAAANG!...THUD! Something slams shut. The BEAM of LIGHT disappears"
+    else
+      puts "OK. Nothing happened"
     end
   end
 end

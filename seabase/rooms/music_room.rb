@@ -32,6 +32,24 @@ room(:music_room) do
         get_root.move(:loudspeaker, :void)
         get_root.move(:magnet, :music_room, false)
       SCRIPT
+
+      self.script_tie = <<-SCRIPT
+        line = get_root.find(:washing_line)
+
+        if get_room.find(:washing_line)
+          get_root.move(:magnet, :void)
+          get_root.move(:washing_line, :lift2)
+
+          line.presence   << " (with magnet attached)"
+          line.short_desc << " (with magnet attached)"
+          line.with_magnet = true
+
+          puts "OK"
+        else
+          puts "I don't know how to do that"
+          return true
+        end
+      SCRIPT
     end
   end
 

@@ -228,29 +228,49 @@ exit car
 south
 get line
 get magnet
+east
+south
+examine panel
+open panel
+drop key
+examine shaft
+tie magnet
+get line
+throw line
+pull line
+get disc
+examine disc
+north
+east
+east
+south
+up
+up
+north
+west
+north
+north
+examine machine
+insert disc
+push joystick
+south
+south
+east
+get player
+east
+north
+west
+get cassette
+insert cassette
+get player
+east
+south
+west
+west
+drop player
+south
 
-E,
-S (Sea Base lift No.2),
-EXAMINE PANEL (it can be opened but it’s locked),
-UNLOCK PANEL (with the key - you discover a deep lift shaft),
-DROP KEY,
-EXAMINE SHAFT (it’s a long way down),
-TIE MAGNET (washing line),
-GET LINE,
-THROW LINE (it hangs down the lift shaft - the magnet picks up something),
-PULL LINE,
-GET DISC,
-EXAMINE DISC (one play),
-N, E, E, S (into lift),
-UP, UP, N, W, N, N (restroom),
-EXAMINE MACHINE (video games machine - insert disc for play),
-INSERT DISC (it’s one of them platform games… a clown is jumping up and down on a circus seesaw),
-PUSH JOYSTICK (a clown jumps into the air...).
-
-S, S, E, GET PLAYER, E, N, W (computer memory banks), GET CASSETTE,
-INSERT CASSETTE (in the tape player - it plays “Heavy Metal Music”), GET PLAYER,
-E, S, W, W (twisting walkway where the microphone is (you hear the sound of metal sliding from the south and there is a dazzling beam of light),
-DROP PLAYER (tape), S (the metal sliding doors are now open),
+S (the metal sliding doors are now open),
 GO DOOR (Seabase security control), EXAMINE KNOB (mini-sub release),
 PULL KNOB, N, N, E, E, N, N (launch control area),
 OPEN ENVELOPE (to gain certificate), READ CERTIFICATE (certificate of insurance),
