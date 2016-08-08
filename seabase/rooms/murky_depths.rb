@@ -7,6 +7,8 @@ room(:murky_depths) do
     huge long object resting on the sea-bed.
   DESC
 
+  self.exit_west = :deck_of_ship
+
   scenery(:open_sea_filled_hatch, 'hatch') do
     self.presence = "Open sea-filled hatch"
 

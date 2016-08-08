@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-08-08 11:13:49 +0100
+# Compiled 2016-08-08 12:24:56 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -189,6 +189,19 @@ class Player < Node
       puts "ZZAAAANG!...THUD! Something slams shut. The BEAM of LIGHT disappears"
     else
       puts "OK. Nothing happened"
+    end
+  end
+
+  def do_type(*number)
+    missile =  get_room.find(:small_missile)
+    return false if missile.nil?
+
+    if number[0] == missile.bearing && missile.bearing_set == false
+      missile.script('set_bearing')
+    elsif number[0] == missile.elevation && missile.bearing_set == true
+      missile.script('fire')
+    else
+      return false
     end
   end
 end
@@ -500,6 +513,34 @@ room(:corridor4) do
       puts "You slide back down. It's too steep."
       return false
     SCRIPT
+  end
+end
+
+room(:deck_of_ship) do
+  self.short_desc = "deck_of_ship"
+  self.desc = <<-DESC
+    I have floated gently onto the deck of an OLD WRECKED SHIP.
+    A crack leads DOWN and to the EAST is the SEA-BASE.
+  DESC
+
+  self.exit_east = :murky_depths
+  self.exit_down = :the_hold
+
+  scenery(:mast, 'mast') do
+    self.presence = "Tall mast"
+    self.desc = <<-DESC
+      LEVER & LEVER & SONS - MAST MAKERS
+    DESC
+  end
+
+  item(:plank, 'plank', 'long') do
+    self.presence = "Long plank (nailed to deck)"
+    self.desc = <<-DESC
+      A SHIMMERING GHOSTLY figure appears &
+      says in a watery voice:<br>
+      "In bygone days this fine ship sank,
+      and traitors made to WALK THE PLANK"
+    DESC
   end
 end
 
@@ -1141,30 +1182,60 @@ end
 
 room(:missile_room) do
   self.exit_south = :station_echo
+
   self.desc = <<-DESC
       I am in the TIGER-FISH MISSILE ROOM. Exit is SOUTH.
   DESC
+
   item(:small_missile, 'missile', 'small') do
     self.fixed = true
     self.desc = <<-DESC
       Not to be confused with the HUGE NUCLEAR MISSILE you've got to stop!
       DESC
     self.presence = "Small Tiger-Fish missile"
+
+    self.bearing_set = false
+    self.bearing = "104"
+    self.elevation = "199"
+
+    self.script_set_bearing = <<-SCRIPT
+      self.bearing_set = true
+
+      get_root.find(:display_screen).desc = "ENTER ELEVATION FIGURES NOW:"
+
+      puts "The screen reads:ENTRY ACCEPTED"
+      puts "ENTER ELEVATION FIGURES NOW:"
+    SCRIPT
+
+    self.script_fire = <<-SCRIPT
+      get_root.move(:small_missile, :void)
+      get_root.find(:mast).presence = "Broken mast"
+      get_root.find(:mast).desc = nil
+      get_root.move(:wood, :deck_of_ship)
+
+      puts "WHOOOOSH!! TIGER-FISH MISSILE IS FIRED AND HEADS OUT TOWARDS THE OLD WRECK..."
+      puts "CRACK!... It hits the MAST of the WRECK!"
+    SCRIPT
   end
+
   item(:display_screen, 'screen') do
     self.fixed = true
+
     self.desc = <<-DESC
       To aim missile enter 1. Degrees Bearing. 2. Elevation.
       Enter bearing figures now:
     DESC
+
     self.presence = "Display screen"
     self.read = ""
   end
+
   item(:keyboard, 'keyboard', 'small') do
     self.fixed = true
     self.presence = "Small keyboard"
   end
 end
+
 room(:murky_depths) do
   self.short_desc = "Murky Depths"
   self.desc = <<-DESC
@@ -1173,6 +1244,8 @@ room(:murky_depths) do
     blackness. To the WEST the lightbeams seem to dance along the edge of some
     huge long object resting on the sea-bed.
   DESC
+
+  self.exit_west = :deck_of_ship
 
   scenery(:open_sea_filled_hatch, 'hatch') do
     self.presence = "Open sea-filled hatch"
@@ -1695,6 +1768,34 @@ room(:tcorridor4) do
   self.exit_west  = :tcorridor3
 end
 
+room(:the_hold) do
+  self.short_desc = "the_hold"
+  self.desc = <<-DESC
+    I am down in THE HOLD of the OLD WRECK.
+    The only way out is UP
+  DESC
+
+  self.exit_up = :deck_of_ship
+
+  item(:telescope, 'telescope', 'ancient') do
+    self.presence = "Ancient telescope"
+    self.desc = <<-DESC
+      You peer through the Eyepiece and...
+
+      I see nothing special.
+    DESC
+  end
+
+  item(:cannon, 'cannon') do
+    self.presence = "Rusty cannon"
+    self.fixed = true
+    self.desc = <<-DESC
+      What's that down in the barrel? If I had
+      some-thing to LEVER the CANNON..
+    DESC
+  end
+end
+
 # The void room is a place to put all the nodes which have no natural place
 # in the game world.
 room(:void) do
@@ -1861,6 +1962,11 @@ room(:void) do
   item(:ink, 'ink') do
     self.presence = "Clouds of ink"
     self.fixed = true
+  end
+
+  item(:wood, 'wood') do
+    self.presence = "Length of strong wood"
+    self.desc = "LEVER & LEVER & SONS - MAST MAKERS"
   end
 end
 

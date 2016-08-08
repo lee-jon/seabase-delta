@@ -173,4 +173,17 @@ class Player < Node
       puts "OK. Nothing happened"
     end
   end
+
+  def do_type(*number)
+    missile =  get_room.find(:small_missile)
+    return false if missile.nil?
+
+    if number[0] == missile.bearing && missile.bearing_set == false
+      missile.script('set_bearing')
+    elsif number[0] == missile.elevation && missile.bearing_set == true
+      missile.script('fire')
+    else
+      return false
+    end
+  end
 end

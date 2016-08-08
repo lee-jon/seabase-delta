@@ -288,6 +288,7 @@ down
 north
 east
 north
+examine thermometer
 south
 east
 east
@@ -304,18 +305,35 @@ down
 north
 east
 north
+enter car
+fasten belt
+insert card in slot
+insert card in slot
+insert card in slot
+unfasten belt
+leave car
+north
+examine screen
+type 104
+type 199
+south
+enter car
+fasten belt
+insert card in slot
+insert card in slot
+insert card in slot
+unfasten belt
+leave car
+enter hatch
+turn wheel
+west
 
-S, E, E, S (head office),
-GET PEN, INSERT CARD, SIGN FORM, DROP PEN, GET CARD, N, E, S (into lift), DOWN.
-
-N, E, N (station “Beta”),
-ENTER CAR, WEAR BELT, INSERT CARD, INSERT CARD, INSERT CARD,
-REMOVE BELT, LEAVE CAR (station “Echo”), N (Tiger Fish missile bay),
 EXAMINE SCREEN (to aim missile enter degrees bearing - 104 from thermometer, and elevation - 199 from “Call Miss Isles”),
 TYPE 104, TYPE 199 (the missile is fired and hits the mast of the wreck),
 S, ENTER CAR, WEAR BELT, INSERT CARD, INSERT CARD, INSERT CARD,
 REMOVE BELT, LEAVE CAR (station “Beta”), ENTER HATCH, TURN WHEEL (murky depths),
 W (to the deck of an old wrecked ship where you see a broken mast),
+
 PULL NAILS (with the dental pincers), DROP PINCERS, GET NAILS, GET WOOD,
 D (hold of the wreck), EXAMINE CANNON (there’s something down the barrel),
 LEVER CANNON (with the length of strong wood), DROP WOOD, GET BALL (rusty),

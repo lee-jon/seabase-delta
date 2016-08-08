@@ -165,4 +165,9 @@ room(:void) do
     self.presence = "Clouds of ink"
     self.fixed = true
   end
+
+  item(:wood, 'wood') do
+    self.presence = "Length of strong wood"
+    self.desc = "LEVER & LEVER & SONS - MAST MAKERS"
+  end
 end
