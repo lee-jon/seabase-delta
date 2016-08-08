@@ -11,6 +11,7 @@ room(:walkway) do
     self.short_desc = "A briefcase."
     self.presence   = "Briefcase"
 
+    #TODO Open briefcase doesn't work as the game does, moving items to parent
     item(:documents, 'documents') do
       self.desc = <<-DESC
       oo TOP SECRET TELEX MESSAGE oo

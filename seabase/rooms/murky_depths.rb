@@ -20,6 +20,7 @@ room(:murky_depths) do
   item(:mini_sub, 'sub') do
     self.presence = "Mini-sub"
     self.desc = "A minature submarine"
+    self.fixed = true
 
     self.released = false
 

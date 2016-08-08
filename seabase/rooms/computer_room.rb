@@ -4,7 +4,7 @@ room(:computer_room) do
   DESC
 
   self.exit_south = :tcorridor3
-  #self.exit_north = 
+  self.exit_north = :launch_control_area
   self.exit_west  = :computer_memory_banks
 
   self.script_enter = <<-SCRIPT

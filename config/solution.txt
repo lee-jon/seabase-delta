@@ -274,12 +274,38 @@ examine knob
 pull knob
 north
 north
+east
+east
+north
+north
+open envelope
+read certificate
+south
+south
+west
+south
+down
+north
+east
+north
+south
+east
+east
+south
+get pen
+insert card in slot
+sign form
+drop pen
+get card
+north
+east
+south
+down
+north
+east
+north
 
-
-E, E, N, N (launch control area),
-OPEN ENVELOPE (to gain certificate), READ CERTIFICATE (certificate of insurance),
-S, S, W, S (lift), DOWN, N, E, N (doctor’s surgery),
-EXAMINE THERMOMETER (104 degrees - note this number), S, E, E, S (head office),
+S, E, E, S (head office),
 GET PEN, INSERT CARD, SIGN FORM, DROP PEN, GET CARD, N, E, S (into lift), DOWN.
 
 N, E, N (station “Beta”),

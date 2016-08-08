@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-08-05 12:06:20 +0100
+# Compiled 2016-08-08 11:13:49 +0100
 
 class Player < Node
   def do_fasten(*words)
@@ -406,7 +406,7 @@ room(:computer_room) do
   DESC
 
   self.exit_south = :tcorridor3
-  #self.exit_north = 
+  self.exit_north = :launch_control_area
   self.exit_west  = :computer_memory_banks
 
   self.script_enter = <<-SCRIPT
@@ -843,6 +843,38 @@ room(:kitchen) do
     end
   end
 end
+room(:launch_control_area) do
+  self.short_desc = "launch_control_area"
+  self.desc = <<-DESC
+    LAUNCH CONTROL AREA<br>
+    Metal paths lead SOUTH and NORTH.
+  DESC
+
+  self.exit_north = :computer_room
+  self.exit_south = :computer_room
+
+  item(:envelope, 'envelope') do
+    self.presence = "Envelope"
+    self.openable = true
+
+    item(:certificate, 'certificate') do
+      self.presence = "certificate"
+      self.desc = <<-DESC
+        CERTIFICATE OF INSURANCE
+        <br>The Adventurer is hereby
+        <br>insured against loss of
+        <br>sleep,headaches,tearing
+        <br>out of hair and sudden
+        <br>outbursts of"Now I see!"
+      DESC
+
+      self.script_read = <<-SCRIPT
+        puts self.desc
+      SCRIPT
+    end
+  end
+end
+
 room(:laundry) do
   self.short_desc = "laundry"
   self.desc = <<-DESC
@@ -1155,6 +1187,7 @@ room(:murky_depths) do
   item(:mini_sub, 'sub') do
     self.presence = "Mini-sub"
     self.desc = "A minature submarine"
+    self.fixed = true
 
     self.released = false
 
@@ -1562,20 +1595,21 @@ end
 room(:surgery) do
   self.short_desc = "surgery"
   self.desc = <<-DESC
-    I'm in the doctors surgery. Exit is South
+    I'm in the DOCTORS SURGERY. Exit is SOUTH
   DESC
-  
+
   self.exit_south = :fcorridor2
-  
+
   item(:thermometer, 'thermometer') do
     self.presence   = "thermometer"
     self.short_desc = "thermometer"
     self.desc = <<-DESC
-      104 degrees! Wow! This adventure must have really fired
-      your imagination!
+      104 DEGREES! WOW! This adventure must have really FIRED
+      YOUR IMAGINATION!
     DESC
   end
 end
+
 room(:tcorridor1) do
   self.short_desc = "Corridor"
   self.desc = <<-DESC
@@ -1843,6 +1877,7 @@ room(:walkway) do
     self.short_desc = "A briefcase."
     self.presence   = "Briefcase"
 
+    #TODO Open briefcase doesn't work as the game does, moving items to parent
     item(:documents, 'documents') do
       self.desc = <<-DESC
       oo TOP SECRET TELEX MESSAGE oo
@@ -1879,6 +1914,7 @@ room(:walkway) do
 
   player
 end
+
 room(:electronic_workshop) do
   self.exit_south = :corridor3
   self.desc = "This is the ELECTRIC WORKSHOP. The only exit is SOUTH from here."
