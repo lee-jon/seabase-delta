@@ -124,16 +124,29 @@ class Player < Node
   def do_make(*words)
     item = get_root.find(words)
 
-    if get_room.find(:milk) && get_room.find(:flour) && get_room.find(:bowl) && get_room.find(:egg)
-      puts "Dolup, Slop, Slush!"
-      get_root.move(:milk, :void)
-      get_root.move(:bowl, :void)
-      get_root.move(:flour, :void)
-      get_root.move(:egg, :void)
-      get_root.move(:bowl_of_mixture, parent, false)
+    if item.tag == :seesaw
+      needed = [:barrel, :plank, :hammer, :nails]
+      if needed.map { |item| get_room.find(item) }.all?
+        needed.each { |item| get_root.move(item, :void) }
+
+        get_root.move(:seesaw, parent)
+      else
+        return false
+      end
+    elsif item.tag == :pancake
+      if get_room.find(:milk) && get_room.find(:flour) && get_room.find(:bowl) && get_room.find(:egg)
+        puts "Dolup, Slop, Slush!"
+        get_root.move(:milk, :void)
+        get_root.move(:bowl, :void)
+        get_root.move(:flour, :void)
+        get_root.move(:egg, :void)
+        get_root.move(:bowl_of_mixture, parent, false)
+      else
+        puts "Its not possible to do that" #TODO: Make this canonical
+        return false
+      end
     else
-      puts "Its not possible to do that" #TODO: Make this canonical
-      return
+      false
     end
   end
 

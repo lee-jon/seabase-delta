@@ -173,6 +173,11 @@ room(:void) do
 
   item(:rusty_ball, "ball", "rusty") do
     self.presence = "Rusty ball"
+    self.short_desc = "Rusty ball"
     self.desc = "Round and black"
+  end
+
+  item(:seesaw, "seesaw") do
+    self.presence = "Seesaw"
   end
 end

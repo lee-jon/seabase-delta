@@ -351,14 +351,33 @@ drop card
 east
 south
 west
+get foil
+east
+north
+west
+south
+up
+north
+west
+north
+east
+get barrel
+west
+south
+east
+east
+get hammer
+north
+north
+north
+examine missile
+examine platform
+make seesaw
 
-S, W, S (into the lift), UP, N, DROP CARD, E, S,
-
-W (laundry), GET FOIL, E, N, W,
-S (into lift), UP, N, W, N, E (tavern), GET BARREL, W, S, E, E, GET HAMMER, N, N,
-N (huge launch pad), EXAMINE MISSILE (controlled by a beam of light up near the platform),
+EXAMINE MISSILE (controlled by a beam of light up near the platform),
 EXAMINE PLATFORM (way up high – can’t reach),
 MAKE SEESAW (with the barrel, plank, hammer and nails - make sure you are carrying the ironed foil and the rusty ball),
+
 WALK PLANK (you are standing on one end of the seesaw),
 THROW BALL (it hits the other end of the seesaw and places you on the warhead platform),
 REFLECT BEAM (with the ironed foil - the beam goes out), JUMP (to get down), S,

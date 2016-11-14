@@ -7,7 +7,7 @@ room(:living_quarters) do
   self.exit_north = :restroom
   self.exit_south = :tcorridor1
   self.exit_west  = :dental_surgery
-  #self.exit_east
+  self.exit_east = :tavern
 
   item(:writing_bureau, 'bureau', 'writing') do
     self.presence = "Writing bureau"

@@ -1,11 +1,11 @@
 room(:launch_control_area) do
-  self.short_desc = "launch_control_area"
+  self.short_desc = "Launch control area"
   self.desc = <<-DESC
     LAUNCH CONTROL AREA<br>
     Metal paths lead SOUTH and NORTH.
   DESC
 
-  self.exit_north = :computer_room
+  self.exit_north = :launch_pad
   self.exit_south = :computer_room
 
   item(:envelope, 'envelope') do

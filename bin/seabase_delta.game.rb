@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-11-13 20:59:57 -0500
+# Compiled 2016-11-14 06:06:24 -0500
 
 class Player < Node
   def do_fasten(*words)
@@ -142,16 +142,29 @@ class Player < Node
   def do_make(*words)
     item = get_root.find(words)
 
-    if get_room.find(:milk) && get_room.find(:flour) && get_room.find(:bowl) && get_room.find(:egg)
-      puts "Dolup, Slop, Slush!"
-      get_root.move(:milk, :void)
-      get_root.move(:bowl, :void)
-      get_root.move(:flour, :void)
-      get_root.move(:egg, :void)
-      get_root.move(:bowl_of_mixture, parent, false)
+    if item.tag == :seesaw
+      needed = [:barrel, :plank, :hammer, :nails]
+      if needed.map { |item| get_room.find(item) }.all?
+        needed.each { |item| get_root.move(item, :void) }
+
+        get_root.move(:seesaw, parent)
+      else
+        return false
+      end
+    elsif item.tag == :pancake
+      if get_room.find(:milk) && get_room.find(:flour) && get_room.find(:bowl) && get_room.find(:egg)
+        puts "Dolup, Slop, Slush!"
+        get_root.move(:milk, :void)
+        get_root.move(:bowl, :void)
+        get_root.move(:flour, :void)
+        get_root.move(:egg, :void)
+        get_root.move(:bowl_of_mixture, parent, false)
+      else
+        puts "Its not possible to do that" #TODO: Make this canonical
+        return false
+      end
     else
-      puts "Its not possible to do that" #TODO: Make this canonical
-      return
+      false
     end
   end
 
@@ -927,13 +940,13 @@ room(:kitchen) do
   end
 end
 room(:launch_control_area) do
-  self.short_desc = "launch_control_area"
+  self.short_desc = "Launch control area"
   self.desc = <<-DESC
     LAUNCH CONTROL AREA<br>
     Metal paths lead SOUTH and NORTH.
   DESC
 
-  self.exit_north = :computer_room
+  self.exit_north = :launch_pad
   self.exit_south = :computer_room
 
   item(:envelope, 'envelope') do
@@ -955,6 +968,31 @@ room(:launch_control_area) do
         puts self.desc
       SCRIPT
     end
+  end
+end
+
+room(:launch_pad) do
+  self.short_desc = "Huge launch pad"
+  self.desc = <<-DESC
+    I have reached the HUGE LAUNCH PAD. A metal path leads SOUTH
+  DESC
+
+  self.exit_south = :launch_control_area
+
+  # Logic
+
+  scenery(:platform, "platform") do
+    self.presence = "Warhead platform"
+    self.desc = <<-DESC
+      Way up high....Can't reach!
+    DESC
+  end
+
+  scenery(:nuclear_missle, "missile") do
+    self.presence = "Huge nuclear missile"
+    self.desc = <<-DESC
+      It is controlled by a BEAM of LIGHT near that platform...
+    DESC
   end
 end
 
@@ -1209,7 +1247,7 @@ room(:living_quarters) do
   self.exit_north = :restroom
   self.exit_south = :tcorridor1
   self.exit_west  = :dental_surgery
-  #self.exit_east
+  self.exit_east = :tavern
 
   item(:writing_bureau, 'bureau', 'writing') do
     self.presence = "Writing bureau"
@@ -1725,6 +1763,22 @@ room(:surgery) do
   end
 end
 
+room(:tavern) do
+  self.short_desc = "tavern"
+  self.desc = <<-DESC
+    I'm in THE SEA-BASE TAVERN. There is a passage leading off west.
+  DESC
+
+  self.exit_west = :living_quarters
+
+  item(:barrel, "barrel") do
+    self.presence = "Barrel"
+    self.desc = <<-DESC
+      Label-"HO-HO" RUM. Its empty. Just as well to keep a clear head in this game!
+    DESC
+  end
+end
+
 room(:tcorridor1) do
   self.short_desc = "Corridor"
   self.desc = <<-DESC
@@ -2029,6 +2083,10 @@ room(:void) do
   item(:rusty_ball, "ball", "rusty") do
     self.presence = "Rusty ball"
     self.desc = "Round and black"
+  end
+
+  item(:seesaw, "seesaw") do
+    self.presence = "Seesaw"
   end
 end
 
