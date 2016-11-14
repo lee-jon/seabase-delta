@@ -170,4 +170,9 @@ room(:void) do
     self.presence = "Length of strong wood"
     self.desc = "LEVER & LEVER & SONS - MAST MAKERS"
   end
+
+  item(:rusty_ball, "ball", "rusty") do
+    self.presence = "Rusty ball"
+    self.desc = "Round and black"
+  end
 end

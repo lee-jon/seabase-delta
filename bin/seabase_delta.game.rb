@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-08-08 12:24:56 +0100
+# Compiled 2016-11-13 20:59:57 -0500
 
 class Player < Node
   def do_fasten(*words)
@@ -203,6 +203,12 @@ class Player < Node
     else
       return false
     end
+  end
+
+  def do_lever(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    result = item.script('lever')
   end
 end
 
@@ -541,6 +547,42 @@ room(:deck_of_ship) do
       "In bygone days this fine ship sank,
       and traitors made to WALK THE PLANK"
     DESC
+
+    self.fixed = true
+
+    self.script_get = <<-SCRIPT
+      # TODO get plank in the game returns "Its NAILED to the deck."
+      # But default text appears too in this engine.
+      
+      if !get_room.find(:nails).pulled
+        puts "Its NAILED to the deck"
+        return false
+      end
+    SCRIPT
+  end
+
+  item(:nails, 'nails') do
+    self.fixed = true
+    self.pulled = false
+
+    self.script_pull = <<-SCRIPT
+      return false unless get_room.find(:dental_pincers)
+      return false if self.pulled
+
+      puts "OK" # TODO? in the game this just refreshes
+
+      plank = get_room.find(:plank)
+      plank.presence = "Long plank"
+      plank.desc = "See what you can MAKE..."
+      plank.fixed = false
+      self.fixed = false
+
+      self.pulled = true
+      self.presence = "Handfull of nails"
+      self.desc = plank.desc
+
+      get_root.move(:nails, :deck_of_ship)
+    SCRIPT
   end
 end
 
@@ -1793,6 +1835,21 @@ room(:the_hold) do
       What's that down in the barrel? If I had
       some-thing to LEVER the CANNON..
     DESC
+
+    self.script_lever = <<-LEVER
+      if !get_room.find(:wood)
+        puts "With what? My bare hands?"
+        return false
+      else
+        puts "I see something..." # Wasn't in original
+
+        cannon = get_root.find(:cannon)
+        cannon.desc = ""
+        cannon.presence = "TIPPED-UP cannon"
+
+        get_root.move(:rusty_ball, :the_hold)
+      end
+    LEVER
   end
 end
 
@@ -1967,6 +2024,11 @@ room(:void) do
   item(:wood, 'wood') do
     self.presence = "Length of strong wood"
     self.desc = "LEVER & LEVER & SONS - MAST MAKERS"
+  end
+
+  item(:rusty_ball, "ball", "rusty") do
+    self.presence = "Rusty ball"
+    self.desc = "Round and black"
   end
 end
 

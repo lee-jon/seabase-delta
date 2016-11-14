@@ -23,5 +23,20 @@ room(:the_hold) do
       What's that down in the barrel? If I had
       some-thing to LEVER the CANNON..
     DESC
+
+    self.script_lever = <<-LEVER
+      if !get_room.find(:wood)
+        puts "With what? My bare hands?"
+        return false
+      else
+        puts "I see something..." # Wasn't in original
+
+        cannon = get_root.find(:cannon)
+        cannon.desc = ""
+        cannon.presence = "TIPPED-UP cannon"
+
+        get_root.move(:rusty_ball, :the_hold)
+      end
+    LEVER
   end
 end

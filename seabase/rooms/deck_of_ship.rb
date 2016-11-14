@@ -23,5 +23,41 @@ room(:deck_of_ship) do
       "In bygone days this fine ship sank,
       and traitors made to WALK THE PLANK"
     DESC
+
+    self.fixed = true
+
+    self.script_get = <<-SCRIPT
+      # TODO get plank in the game returns "Its NAILED to the deck."
+      # But default text appears too in this engine.
+      
+      if !get_room.find(:nails).pulled
+        puts "Its NAILED to the deck"
+        return false
+      end
+    SCRIPT
+  end
+
+  item(:nails, 'nails') do
+    self.fixed = true
+    self.pulled = false
+
+    self.script_pull = <<-SCRIPT
+      return false unless get_room.find(:dental_pincers)
+      return false if self.pulled
+
+      puts "OK" # TODO? in the game this just refreshes
+
+      plank = get_room.find(:plank)
+      plank.presence = "Long plank"
+      plank.desc = "See what you can MAKE..."
+      plank.fixed = false
+      self.fixed = false
+
+      self.pulled = true
+      self.presence = "Handfull of nails"
+      self.desc = plank.desc
+
+      get_root.move(:nails, :deck_of_ship)
+    SCRIPT
   end
 end

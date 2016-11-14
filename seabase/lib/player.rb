@@ -186,4 +186,10 @@ class Player < Node
       return false
     end
   end
+
+  def do_lever(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    result = item.script('lever')
+  end
 end

@@ -79,6 +79,7 @@ west
 get iron
 iron foil
 drop iron
+drop foil
 get line
 east
 north
@@ -327,19 +328,33 @@ leave car
 enter hatch
 turn wheel
 west
+pull nails
+drop pincers
+get nails
+get wood
+down
+examine cannon
+lever cannon
+drop wood
+get ball
+up
+get plank
+east
+enter hatch
+turn wheel
+south
+west
+south
+up
+north
+drop card
+east
+south
+west
 
-EXAMINE SCREEN (to aim missile enter degrees bearing - 104 from thermometer, and elevation - 199 from “Call Miss Isles”),
-TYPE 104, TYPE 199 (the missile is fired and hits the mast of the wreck),
-S, ENTER CAR, WEAR BELT, INSERT CARD, INSERT CARD, INSERT CARD,
-REMOVE BELT, LEAVE CAR (station “Beta”), ENTER HATCH, TURN WHEEL (murky depths),
-W (to the deck of an old wrecked ship where you see a broken mast),
+S, W, S (into the lift), UP, N, DROP CARD, E, S,
 
-PULL NAILS (with the dental pincers), DROP PINCERS, GET NAILS, GET WOOD,
-D (hold of the wreck), EXAMINE CANNON (there’s something down the barrel),
-LEVER CANNON (with the length of strong wood), DROP WOOD, GET BALL (rusty),
-U, GET PLANK, E, ENTER HATCH, TURN WHEEL.
-
-S, W, S (into the lift), UP, N, DROP CARD, E, S, W (laundry), GET FOIL, E, N, W,
+W (laundry), GET FOIL, E, N, W,
 S (into lift), UP, N, W, N, E (tavern), GET BARREL, W, S, E, E, GET HAMMER, N, N,
 N (huge launch pad), EXAMINE MISSILE (controlled by a beam of light up near the platform),
 EXAMINE PLATFORM (way up high – can’t reach),
