@@ -375,10 +375,22 @@ examine platform
 make seesaw
 walk plank
 throw ball
-
-REFLECT BEAM (with the ironed foil - the beam goes out), JUMP (to get down), S,
-S, S, W, S (into lift), DOWN, DOWN, N, E, N, ENTER HATCH, TURN WHEEL,
-ENTER SUB (mini), PULL LEVER.
+reflect beam
+jump
+south
+south
+south
+west
+south
+down
+down
+north
+east
+north
+enter hatch
+turn wheel
+enter sub
+pull lever
 
 HUMMMM..... The engines start.
 WELL DONE ED

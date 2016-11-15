@@ -71,6 +71,12 @@ class Player < Node
     item.script('sign')
   end
 
+  def do_reflect(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('reflect')
+  end
+
   def do_iron(*words)
     if get_room.find(:steam_iron)
       item = get_room.find(words)
@@ -212,5 +218,11 @@ class Player < Node
     item = get_room.find(words)
     return if item.nil?
     item.script("walk")
+  end
+
+  def do_jump(*direction)
+    return if get_room.script_jump.nil?
+
+    get_root.move(:player, get_room.script_jump)
   end
 end

@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-11-15 16:08:37 +0000
+# Compiled 2016-11-15 16:47:50 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -87,6 +87,12 @@ class Player < Node
     item = get_room.find(words)
     return if item.nil?
     item.script('sign')
+  end
+
+  def do_reflect(*words)
+    item = get_room.find(words)
+    return if item.nil?
+    item.script('reflect')
   end
 
   def do_iron(*words)
@@ -230,6 +236,12 @@ class Player < Node
     item = get_room.find(words)
     return if item.nil?
     item.script("walk")
+  end
+
+  def do_jump(*direction)
+    return if get_room.script_jump.nil?
+
+    get_root.move(:player, get_room.script_jump)
   end
 end
 
@@ -998,11 +1010,13 @@ room(:launch_pad) do
     DESC
   end
 
-  scenery(:nuclear_missle, "missile") do
+  scenery(:nuclear_missile, "missile") do
     self.presence = "Huge nuclear missile"
     self.desc = <<-DESC
       It is controlled by a BEAM of LIGHT near that platform...
     DESC
+
+    self.active = true
   end
 end
 
@@ -1430,30 +1444,7 @@ end
 room(:plank_platform) do
   self.short_desc = "I'm STANDING on one end of a SEESAW. Exit is SOUTH"
   self.desc = short_desc
-
-  # TODO in the game you have to JUMP to exit!
-  self.exit_south = :launch_pad
-end
-
-room(:warhead_platform) do
-  self.short_desc = "platform"
-  self.desc = <<-DESC
-    I am now high up on the WARHEAD PLATFORM.
-    A small ladder leads UP & the LAUNCH PAD
-    is quite a long JUMP below.
-  DESC
-
-  self.exit_up   = :warhead
-  self.exit_down = :launch_pad
-
-  # Items
-  scenery(:beam_of_light, "beam") do
-    self.presence = "Thin beam of light"
-    self.desc = "On reflection, I'd rather not.."
-
-    self.script_reflect = <<-SCRIPT
-    SCRIPT
-  end
+  self.script_jump = :launch_pad
 end
 
 room(:power_distribution) do
@@ -1763,19 +1754,30 @@ room(:submarine) do
 
   self.released = false
 
-  self.script_exit do
+  self.script_exit = <<-SCRIPT
     get_root.move(:player, :murky_depths)
-  end
+  SCRIPT
 
   scenery(:small_lever, 'lever') do
     self.presence = "Small lever"
 
     self.script_pull = <<-SCRIPT
-
-
       puts "HUMM...The engines start.."
+
       if parent.released
-        puts "NO. I just can't be so cowardly. I have to stop that missile..."
+        if get_root.find(:nuclear_missile).active
+          puts "NO. I just can't be so cowardly. I have to stop that missile..."
+        else
+          puts "WELL DONE ED!!!"
+          puts "WHAT A STORY THIS IS GOING TO MAKE!"
+          puts "\n"
+          sleep 5
+          puts "END OF GAME"
+          get_root.move(:player, void)
+          sleep 10
+          puts "Try again?"
+          exit
+        end
       else
         puts 'Metalic-voice-"NO SECURITY RELEASE.'
         puts 'MINI-SUB LAUNCH ABORTED!"'
@@ -2211,6 +2213,32 @@ room(:warhead) do
   DESC
 
   self.exit_down = :warhead_platform
+end
+
+room(:warhead_platform) do
+  self.short_desc = "platform"
+  self.desc = <<-DESC
+    I am now high up on the WARHEAD PLATFORM.
+    A small ladder leads UP & the LAUNCH PAD
+    is quite a long JUMP below.
+  DESC
+
+  self.exit_up   = :warhead
+  self.exit_down = :launch_pad
+
+  self.script_jump = :launch_pad
+
+  # Items
+  scenery(:beam_of_light, "beam") do
+    self.presence = "Thin beam of light"
+    self.desc = "On reflection, I'd rather not.."
+
+    self.script_reflect = <<-SCRIPT
+      puts "THE BEAM IS REFLECTED BACK BY THE FOIL AND GOES OUT!!"
+      get_root.move(:beam_of_light, :void)
+      get_root.find(:nuclear_missile).active = false
+    SCRIPT
+  end
 end
 
 room(:electronic_workshop) do

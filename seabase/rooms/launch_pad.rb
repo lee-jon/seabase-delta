@@ -13,10 +13,12 @@ room(:launch_pad) do
     DESC
   end
 
-  scenery(:nuclear_missle, "missile") do
+  scenery(:nuclear_missile, "missile") do
     self.presence = "Huge nuclear missile"
     self.desc = <<-DESC
       It is controlled by a BEAM of LIGHT near that platform...
     DESC
+
+    self.active = true
   end
 end
