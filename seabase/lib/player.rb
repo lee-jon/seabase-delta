@@ -205,4 +205,12 @@ class Player < Node
     return if item.nil?
     result = item.script('lever')
   end
+
+  def do_walk(*words)
+    words = ["seesaw"] if words.include? "plank"
+
+    item = get_room.find(words)
+    return if item.nil?
+    item.script("walk")
+  end
 end

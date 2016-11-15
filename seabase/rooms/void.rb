@@ -171,13 +171,34 @@ room(:void) do
     self.desc = "LEVER & LEVER & SONS - MAST MAKERS"
   end
 
-  item(:rusty_ball, "ball", "rusty") do
+  item(:rusty_ball, "ball") do
     self.presence = "Rusty ball"
     self.short_desc = "Rusty ball"
     self.desc = "Round and black"
+
+    self.script_throw = <<-SCRIPT
+      if self.get_room.tag == :plank_platform
+        puts "Ball hits the other end of SEESAW..."
+        sleep 1
+        puts "Wheeeee!!!"
+        sleep 1
+        get_root.move(:rusty_ball, :plank_platform)
+        get_root.move(:player, :warhead_platform)
+      end
+    SCRIPT
   end
 
   item(:seesaw, "seesaw") do
     self.presence = "Seesaw"
+
+    self.script_walk = <<-SCRIPT
+      if parent.tag == :player
+        puts "Drop it first Ed!"
+      elsif parent.tag == :launch_pad
+        get_root.move(:player, :plank_platform)
+      else # if not in the right room
+        puts "Not just yet Ed!"
+      end
+    SCRIPT
   end
 end

@@ -29,11 +29,15 @@ room(:deck_of_ship) do
     self.script_get = <<-SCRIPT
       # TODO get plank in the game returns "Its NAILED to the deck."
       # But default text appears too in this engine.
-      
+
       if !get_room.find(:nails).pulled
         puts "Its NAILED to the deck"
         return false
       end
+    SCRIPT
+
+    self.script_walk = <<-SCRIPT
+      puts "HMM..seems quite springy..even after all those years.."
     SCRIPT
   end
 

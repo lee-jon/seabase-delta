@@ -6,8 +6,6 @@ room(:launch_pad) do
 
   self.exit_south = :launch_control_area
 
-  # Logic
-
   scenery(:platform, "platform") do
     self.presence = "Warhead platform"
     self.desc = <<-DESC

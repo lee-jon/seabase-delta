@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-11-14 06:06:24 -0500
+# Compiled 2016-11-15 16:08:37 +0000
 
 class Player < Node
   def do_fasten(*words)
@@ -222,6 +222,14 @@ class Player < Node
     item = get_room.find(words)
     return if item.nil?
     result = item.script('lever')
+  end
+
+  def do_walk(*words)
+    words = ["seesaw"] if words.include? "plank"
+
+    item = get_room.find(words)
+    return if item.nil?
+    item.script("walk")
   end
 end
 
@@ -566,11 +574,15 @@ room(:deck_of_ship) do
     self.script_get = <<-SCRIPT
       # TODO get plank in the game returns "Its NAILED to the deck."
       # But default text appears too in this engine.
-      
+
       if !get_room.find(:nails).pulled
         puts "Its NAILED to the deck"
         return false
       end
+    SCRIPT
+
+    self.script_walk = <<-SCRIPT
+      puts "HMM..seems quite springy..even after all those years.."
     SCRIPT
   end
 
@@ -978,8 +990,6 @@ room(:launch_pad) do
   DESC
 
   self.exit_south = :launch_control_area
-
-  # Logic
 
   scenery(:platform, "platform") do
     self.presence = "Warhead platform"
@@ -1414,6 +1424,35 @@ room(:music_room) do
   item(:hifi_unit, 'hifi', 'unit') do
     self.fixed = true
     self.presence = "Hifi unit"
+  end
+end
+
+room(:plank_platform) do
+  self.short_desc = "I'm STANDING on one end of a SEESAW. Exit is SOUTH"
+  self.desc = short_desc
+
+  # TODO in the game you have to JUMP to exit!
+  self.exit_south = :launch_pad
+end
+
+room(:warhead_platform) do
+  self.short_desc = "platform"
+  self.desc = <<-DESC
+    I am now high up on the WARHEAD PLATFORM.
+    A small ladder leads UP & the LAUNCH PAD
+    is quite a long JUMP below.
+  DESC
+
+  self.exit_up   = :warhead
+  self.exit_down = :launch_pad
+
+  # Items
+  scenery(:beam_of_light, "beam") do
+    self.presence = "Thin beam of light"
+    self.desc = "On reflection, I'd rather not.."
+
+    self.script_reflect = <<-SCRIPT
+    SCRIPT
   end
 end
 
@@ -2080,13 +2119,35 @@ room(:void) do
     self.desc = "LEVER & LEVER & SONS - MAST MAKERS"
   end
 
-  item(:rusty_ball, "ball", "rusty") do
+  item(:rusty_ball, "ball") do
     self.presence = "Rusty ball"
+    self.short_desc = "Rusty ball"
     self.desc = "Round and black"
+
+    self.script_throw = <<-SCRIPT
+      if self.get_room.tag == :plank_platform
+        puts "Ball hits the other end of SEESAW..."
+        sleep 1
+        puts "Wheeeee!!!"
+        sleep 1
+        get_root.move(:rusty_ball, :plank_platform)
+        get_root.move(:player, :warhead_platform)
+      end
+    SCRIPT
   end
 
   item(:seesaw, "seesaw") do
     self.presence = "Seesaw"
+
+    self.script_walk = <<-SCRIPT
+      if parent.tag == :player
+        puts "Drop it first Ed!"
+      elsif parent.tag == :launch_pad
+        get_root.move(:player, :plank_platform)
+      else # if not in the right room
+        puts "Not just yet Ed!"
+      end
+    SCRIPT
   end
 end
 
@@ -2139,6 +2200,17 @@ room(:walkway) do
   end
 
   player
+end
+
+room(:warhead) do
+  self.short_desc = "warhead"
+  self.desc = <<-DESC
+    I am sitting on top of the WARHEAD.
+    If the missile fired now I'd get home a bit quicker than I'd planned!
+    A ladder leads DOWN.
+  DESC
+
+  self.exit_down = :warhead_platform
 end
 
 room(:electronic_workshop) do
