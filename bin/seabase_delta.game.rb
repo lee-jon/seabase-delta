@@ -14,7 +14,7 @@
 # Lines emerges from the submarine to find the Seabase mysteriously deserted;
 # he must discover its secrets and escape.
 
-# Compiled 2016-11-15 16:47:50 +0000
+# Compiled 2017-05-04 16:02:54 +0100
 
 class Player < Node
   def do_fasten(*words)

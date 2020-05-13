@@ -11,6 +11,7 @@ room(:murky_depths) do
 
   scenery(:open_sea_filled_hatch, 'hatch') do
     self.presence = "Open sea-filled hatch"
+    self.openable = true
 
     self.script_enter = <<-SCRIPT
       get_root.move(:player, :airlock)
